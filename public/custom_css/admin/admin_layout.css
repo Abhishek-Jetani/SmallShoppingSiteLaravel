@@ -1,0 +1,34 @@
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content_column {
+    height: 89.2vh;
+    /* border-left: 15px solid #f0f0f0; */
+    background: #f0f0f0;
+    overflow-y: scroll;
+}
+
+.menu_column {
+    background: white !important;
+}
+
+.home_ul>li {
+    padding-left: 4px;
+}
+
+.home_ul>li>a {
+    padding: 15px;
+}
+
+.home_li.active {
+    background-color: #007FFF;
+    color: #000;
+}
+
+.home_li.active .home_li_a {
+    color: #ffffff;
+}

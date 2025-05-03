@@ -1,0 +1,25 @@
+-- ₹ align proper in cart 
+--payment integration stripe 
+    --in admin dashboard : add filter on order and create chart of orders and their total price
+
+
+::::  later ::::
+top 5 most selling products 
+
+
+
+
+
+
+
+
+
+
+
+
+
+::::  done ::::
+validation 
+helper 
+after delete image delete in storage 
+
