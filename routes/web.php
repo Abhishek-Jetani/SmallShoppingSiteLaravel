@@ -23,6 +23,7 @@ use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminUserOrderController;
 use App\Http\Controllers\AdminManageCustomerController;
+use App\Http\Controllers\AdminReportController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -87,6 +88,11 @@ Route::group(['prefix' => 'admin',  'middleware' => ['auth', 'isAdmin']], functi
     Route::controller(AdminCategoryController::class)->group(function () {
         Route::resource('category', AdminCategoryController::class);
     });
+
+    // Reports
+    Route::controller(AdminReportController::class)->group(function () {
+        Route::get('/reports', 'index')->name('admin.reports');
+    });
 });
 
 
@@ -144,6 +150,7 @@ Route::group([], function () {
         Route::get('/welcome', 'welcome')->name('welcome');
         Route::get('/', 'index')->middleware('revalidate')->name('home');
         Route::get('/latest_product_home', 'latest_product_home')->name('user.latest_product_home');
+        Route::get('/top_selling_products', 'top_selling_products')->name('user.top_selling_products');
     });
 
     // static pages

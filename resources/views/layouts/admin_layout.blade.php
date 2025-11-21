@@ -209,6 +209,12 @@
                         <i class="fa fa-users"></i> Manage Customers
                     </a>
                 </li>
+
+                <li class="home_li {{ $currentRoute == 'admin.reports' ? 'active' : '' }}">
+                    <a href="{{ route('admin.reports') }}">
+                        <i class="fa fa-chart-line"></i> Reports & Analytics
+                    </a>
+                </li>
             </ul>
 
         </div>
