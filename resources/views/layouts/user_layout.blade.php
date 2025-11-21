@@ -4,442 +4,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> @yield('title') </title>
+    <title>@yield('title')</title>
 
-    {{-- bootstrap 5  --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    {{-- font awesome  --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
 
     @yield('styles')
 
-
     <style>
-        * {
+        body {
             font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
+            background: #fafafa;
+            opacity: 0;
+            animation: fadeIn .6s ease forwards;
         }
 
-        .home_image_div {
-            max-width: 95px;
-            max-height: 95px;
-            margin-left: 25px;
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
         }
 
-        .home_image {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 10px;
-        }
-
-        .btn_profile {
-            color: white;
-            background: orangered;
-            border: 1px solid orangered;
-            border-radius: 5px;
-        }
-
-        .btn_profile:hover {
-            color: white;
-            background: rgb(228, 68, 10);
-        }
-
-        .home_cart {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .home_cart:hover {
-            background: #ef2a10;
-            color: white;
-            /* border: none !important; */
-        }
-
-        .home_ul>li>a {
-            color: #000000;
+        /* Navbar */
+        .navbar-nav .nav-link {
             font-weight: 500;
-            font-family: 'Source Sans Pro', sans-serif;
+            transition: .3s;
         }
 
-        .cart_count {
-            background: orangered;
-            color: white;
-            border: 1px solid orangered;
-            border-radius: 55px;
+        .navbar-nav .nav-link:hover {
+            color: #007bff !important;
+            transform: translateY(-2px);
         }
 
-        .my_wishlist {
-            color: #000;
+        .active_nav {
+            color: #007bff !important;
+            border-bottom: 2px solid #007bff;
+        }
+
+        /* Product Image Fallback */
+        img.product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        img.product-img:not([src]), img.product-img[src=""] {
+            content: url('{{ asset("images/default_product.png") }}');
+        }
+
+        /* Footer */
+        .footer-area {
+            background: #111;
+            color: #ddd;
+            padding: 60px 0;
+        }
+
+        .footer-area a {
+            color: #ccc;
             text-decoration: none;
         }
 
-
-        .home_li>.active_nav {
-            color: #0080ff;
-            border-radius: 10px;
-        }
-
-
-
-        /* footer start  */
-        .subscribe_email {
-            width: 100%;
-            background: #000;
-            display: block;
-        }
-
-        .subscribe_email h4 {
-            color: white;
-            margin-left: 35px;
-            padding: 30px;
-        }
-
-        .subscribe_email form {
-            color: white;
-            margin-right: 35px;
-            padding: 30px;
-        }
-
-        .subscribe_email input {
-            width: 425px;
-        }
-
-        .subscribe_email form button {
-            background: orangered;
+        .footer-area a:hover {
             color: white;
         }
 
-        .subscribe_email form button:hover {
-            background: rgb(225, 63, 5);
-            color: white;
-        }
-
-        .footer {
-            background: rgb(0, 0, 0);
-            color: white;
-        }
-
-        .dropdown-menu {
-            margin-left: -66px !important;
-        }
-
-        /* custom loader  */
+        /* Loader */
         .lds-dual-ring,
         .lds-dual-ring:after {
             box-sizing: border-box;
         }
 
         .lds-dual-ring {
-            /* z-index: 1; */
-            margin-top: 300px;
-            height: 80px;
+            margin-top: 250px;
             display: flex;
-            justify-content: center !important;
-            align-items: center !important;
-
+            justify-content: center;
         }
 
         .lds-dual-ring:after {
             content: " ";
-            display: block;
-            width: 64px;
-            height: 64px;
-            border-radius: 90%;
-            border: 6.4px solid currentColor;
-            border-color: currentColor transparent currentColor transparent;
-            animation: lds-dual-ring 1.2s linear infinite;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 6px solid currentColor;
+            border-color: orangered transparent orangered transparent;
+            animation: lds-dual-ring 1s linear infinite;
         }
 
         @keyframes lds-dual-ring {
-            0% {
-                transform: rotate(0deg);
-            }
-
             100% {
                 transform: rotate(360deg);
             }
         }
 
-        .log_in_btn {
-            width: 100px !important;
+        /* Card hover animation */
+        .hover-card {
+            transition: .3s;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 20px #00000029;
         }
     </style>
 </head>
 
 <body>
 
+    <!-- LOADER -->
     <div class="lds-dual-ring"></div>
 
-    {{-- ---------------------- header start ---------------------- --}}
-
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <div class="col-auto">
-                    <img src="{{ asset('images/bg_1.jpg') }}" alt="Brand Logo" class="rounded"
-                        style="width: 55px; height: auto; object-fit: cover;">
-                </div>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="/">
+                <img src="{{ asset('images/bg_1.jpg') }}" width="50" class="rounded">
+                <span class="ms-2">Small Shopping Site</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+                <i class="fa fa-bars"></i>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="home_ul navbar-nav me-auto mb-2 ms-5 mb-lg-0">
-                    @php
-                        $currentRoute = Route::currentRouteName();
-                    @endphp
-                    <li class="nav-item home_li">
-                        <a class="nav-link home_li_a {{ $currentRoute == 'home' ? 'active_nav' : '' }}"
-                            aria-current="page" href="{{ route('home') }}">
-                            Home</a>
+
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-5 me-auto">
+                    @php $r = Route::currentRouteName(); @endphp
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ $r=='home' ? 'active_nav' : '' }}" href="{{ route('home') }}">Home</a>
                     </li>
-                    <li class="nav-item home_li">
-                        <a class="nav-link home_li_a {{ $currentRoute == 'products.index' ? 'active_nav' : '' }}"
-                            href=" {{ route('products.index') }}">
-                            Products</a>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $r=='products.index' ? 'active_nav' : '' }}" href="{{ route('products.index') }}">Products</a>
                     </li>
-                    <li class="nav-item home_li">
-                        <a class="nav-link home_li_a {{ $currentRoute == 'order.getUserOrders' ? 'active_nav' : '' }}"
-                            href=" {{ route('order.getUserOrders') }}">
-                            My Order</a>
-                    </li>
-                    <li class="nav-item home_li">
-                        <a class="nav-link home_li_a {{ $currentRoute == 'user.aboutus' ? 'active_nav' : '' }}"
-                            href=" {{ route('user.aboutus') }}">
-                            About us</a>
-                    </li>
-                    @if (Auth::check())
-                        <li class="nav-item home_li">
-                            <a class="nav-link home_li_a {{ $currentRoute == 'wishlist.index' ? 'active_nav' : '' }}"
-                                href=" {{ route('wishlist.index') }}">
-                                <i class="fa fa-heart-o"> </i> Wishlist</a>
+
+                    @if(Auth::check())
+                        <li class="nav-item">
+                            <a class="nav-link {{ $r=='wishlist.index' ? 'active_nav' : '' }}" href="{{ route('wishlist.index') }}"><i class="fa fa-heart"></i> Wishlist</a>
                         </li>
                     @endif
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ $r=='user.aboutus' ? 'active_nav' : '' }}" href="{{ route('user.aboutus') }}">About</a>
+                    </li>
                 </ul>
-                <div class="d-flex">
 
-                    <a href="{{ route('cart.index') }}" class="home_cart btn border-dark me-2" type="submit"><i
-                            class="fa fa-shopping-cart me-1"> </i> My cart <sup id="cart-count"></sup></a>
-                    <div>
-                        <ul class="navbar-nav h-35 m-0 p-0">
-                            <li class="nav-item dropdown m-0 p-0">
-                                @if (Auth::check())
-                                    <a class="nav-link dropdown-toggle ms-1 username" href="" id="drop2"
-                                        style="paddind:0;" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="../assets/images/profile/user-1.jpg" alt="" width="30"
-                                            height="30" class="rounded-circle ">
-                                        <span class="text single-line"> {{ Auth::user()->name }} </span>
+                <!-- Cart & Profile -->
+                <div class="d-flex align-items-center gap-3">
+                    <a href="{{ route('cart.index') }}" class="btn btn-outline-dark position-relative">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span id="cart-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle"></span>
+                    </a>
+
+                    @if(Auth::check())
+                        <div class="dropdown">
+                            <a class="dropdown-toggle d-flex align-items-center text-dark fw-semibold" data-bs-toggle="dropdown">
+                                <img src="../assets/images/profile/user-1.jpg" width="32" class="rounded-circle me-2">
+                                {{ Auth::user()->name }}
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('changePassword') }}"><i class="fa fa-lock"></i> Change Password</a></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fa fa-sign-out"></i> Logout
                                     </a>
-                                @else
-                                    <a class="nav-link btn m-0 ms-1 btn log_in_btn"
-                                        style="color: white;background:orangered;" href="{{ route('login') }}">Sign
-                                        up</a>
-                                @endif
+                                </li>
+                            </ul>
 
-
-                                <ul class="dropdown-menu dropdown-menu-light"
-                                    aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="{{ route('profile') }}">
-                                            <i class="fa fa-user" aria-hidden="true"></i> My Profile</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="{{ route('changePassword') }}">
-                                            <i class="fa fa-lock" aria-hidden="true"></i> Change Password</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="/password/reset">
-                                            <i class="fa fa-lock" aria-hidden="true"></i> Forgot Password</a>
-                                    </li>
-                                    {{-- authenticate check  --}}
-                                    @if (Auth::check())
-                                        <li><a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
-                                            </a>
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                style="display: none;">
-                                                @csrf
-                                            </form>
-                                        </li>
-                                    @endif
-
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display:none">
+                                @csrf
+                            </form>
+                        </div>
+                    @else
+                        <a class="btn btn-primary" href="{{ route('login') }}">Login</a>
+                    @endif
                 </div>
             </div>
         </div>
     </nav>
-    {{-- ---------------------- header end ---------------------- --}}
 
-
-
-    {{-- ---------------------- body content start ---------------------- --}}
-    <div class="border-top mt-1">
+    <!-- MAIN BODY -->
+    <div class="container mt-4 mb-5">
         @yield('content')
     </div>
-    {{-- ---------------------- body content end ---------------------- --}}
 
+    <!-- EXPANDED FOOTER -->
+    <div class="footer-area">
+        <div class="container">
 
+            <!-- NEWSLETTER -->
+            <div class="row mb-5 pb-4 border-bottom">
+                <div class="col-md-6">
+                    <h4>Stay Updated</h4>
+                    <p>Get product updates, discounts & offers.</p>
+                </div>
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input type="email" placeholder="Enter your email" class="form-control me-2">
+                        <button class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
 
-    {{-- ---------------------- footer start ---------------------- --}}
-    <div class="footer">
-        <div class="subscribe_email d-flex">
-            <h4 class="flex-grow-1">Get Exclusive insights: Subscribe now to our newsletter!</h4>
-            <form class="d-flex">
-                <input class=" me-2" type="search" placeholder="   Type your mail" aria-label="Search"
-                    style="border-radius: 5px; border:1px solid white;">
-                <button class="btn" type="submit">Subscribe</button>
-            </form>
-        </div>
-
-        <div class="m-0 p-0 text-light">
-            <footer class="footer row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5  border-top m-0 p-0">
-                <div class="col mb-3 ps-5">
-                    <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-                        <img src="https://t3.ftcdn.net/jpg/03/65/42/00/360_F_365420014_xjsSDkKzrhq4gr9GFzP6S97H7MJyNI5B.jpg"
-                            width="40" height="32"></img>
-                    </a>
-                    <p class="text-light ">© 2024</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About</h5>
+                    <p class="text-muted">We provide high quality products with fast delivery and customer support.</p>
                 </div>
 
-                <div class="col mb-3">
-
-                </div>
-
-                <div class="col mb-3">
-                    <h5>Section</h5>
-                    <ul class="nav flex-column">
-
-                        <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-light">Home</a>
-                        </li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.aboutus') }}"
-                                class="nav-link p-0 text-light">About Us</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.privacy_policy') }}"
-                                class="nav-link p-0 text-light">Privacy & Policy</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.term_condition') }}"
-                                class="nav-link p-0 text-light">Terms And Conditions</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('products.index') }}"
-                                class="nav-link p-0 text-light">Products</a></li>
+                <!-- FAQ -->
+                <div class="col-md-4">
+                    <h5>FAQ</h5>
+                    <ul class="list-unstyled small">
+                        <li><a href="#">How do I place an order?</a></li>
+                        <li><a href="#">Do you offer refunds?</a></li>
+                        <li><a href="#">How fast is delivery?</a></li>
+                        <li><a href="#">Do you have support?</a></li>
                     </ul>
                 </div>
 
-                <div class="col mb-3">
-                    <h5>Section</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-light">Home</a>
-                        </li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.aboutus') }}"
-                                class="nav-link p-0 text-light">About Us</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.privacy_policy') }}"
-                                class="nav-link p-0 text-light">Privacy & Policy</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.term_condition') }}"
-                                class="nav-link p-0 text-light">Terms And Conditions</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('products.index') }}"
-                                class="nav-link p-0 text-light">Products</a></li>
+                <!-- NEWS -->
+                <div class="col-md-4">
+                    <h5>Latest News</h5>
+                    <ul class="list-unstyled small">
+                        <li><a href="#">New arrivals are now live!</a></li>
+                        <li><a href="#">Christmas sale starts soon</a></li>
                     </ul>
                 </div>
+            </div>
 
-                <div class="col mb-3">
-                    <h5>Section</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-light">Home</a>
-                        </li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.aboutus') }}"
-                                class="nav-link p-0 text-light">About Us</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.privacy_policy') }}"
-                                class="nav-link p-0 text-light">Privacy & Policy</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('user.term_condition') }}"
-                                class="nav-link p-0 text-light">Terms And Conditions</a></li>
-                        <li class="nav-item mb-2"><a href="{{ route('products.index') }}"
-                                class="nav-link p-0 text-light">Products</a></li>
-                    </ul>
-                </div>
-            </footer>
+            <p class="text-center text-muted mt-4">© {{ date('Y') }} MyShop. All rights reserved.</p>
         </div>
     </div>
-    {{-- ---------------------- footer end ---------------------- --}}
 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- CART COUNT AJAX -->
     <script>
         function updateCartCount() {
-            $.ajax({
-                url: '/cart/count',
-                method: 'GET',
-                success: function(data) {
-                    $('#cart-count').text(data.count);
-                },
-                error: function(err) {
-                    console.error('Error fetching cart count:', err);
-                }
+            $.get('/cart/count', function (data) {
+                $('#cart-count').text(data.count);
             });
         }
         updateCartCount();
 
-        // custom loding
-        document.onreadystatechange = function() {
-            if (document.readyState !== "complete") {
-                document.querySelector(
-                    "body").style.visibility = "hidden";
-                document.querySelector(
-                    ".lds-dual-ring").style.visibility = "visible";
-            } else {
-                document.querySelector(
-                    ".lds-dual-ring").style.display = "none";
-                document.querySelector(
-                    "body").style.visibility = "visible";
+        // Hide loader on page load
+        document.onreadystatechange = function () {
+            if (document.readyState === "complete") {
+                document.querySelector(".lds-dual-ring").style.display = "none";
             }
         };
     </script>
 
-
-    @if (session()->has('success'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: "{{ session('success') }}"
-            });
-        </script>
-    @endif
-    @if (session()->has('error'))
-        <script>
-            Swal.fire({
-                title: 'Error!',
-                text: '{{ session('error') }}',
-                icon: 'error',
-                showCancelButton: false,
-                showConfirmButton: false,
-                timer: 3000,
-            })
-        </script>
-    @endif
-
     @yield('scripts')
-</body>
 
+</body>
 </html>

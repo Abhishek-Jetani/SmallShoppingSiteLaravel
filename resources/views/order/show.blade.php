@@ -1,122 +1,148 @@
 {{-- order/show.blade.php  --}}
 
 @extends('layouts.user_layout')
-@section('title')
-    Order
-@endsection
+@section('title', 'My Orders')
+
 @section('styles')
-    <style>
-        .row label {
-            font-weight: 600;
-        }
-    </style>
+<style>
+    .order-container {
+        max-width: 1000px;
+        border-radius: 12px;
+        border: 1px solid #e4e4e4;
+        background: #ffffff;
+        padding-bottom: 10px;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .order-header {
+        padding: 18px 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .order-row {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        transition: 0.2s;
+    }
+
+    .order-row:hover {
+        background: #f6f9ff;
+    }
+
+    .order-row img {
+        object-fit: cover;
+        border-radius: 8px;
+        height: 50px;
+        width: 50px;
+    }
+
+    .no-orders-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        border: 1px solid #e4e4e4;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .order-title {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+
+    .order-label {
+        font-weight: 600;
+        font-size: 14px;
+    }
+</style>
 @endsection
+
+
 @section('content')
 
+@if ($isOrder > 0)
 
+<div class="container mt-4 mb-2 order-container">
 
+    <div class="d-flex align-items-center order-header">
+        <h4 class="flex-grow-1 mb-0">My Orders</h4>
+        <a href="{{ route('order.user_allorder_pdf') }}" class="btn btn-primary btn-sm">
+            Download PDF
+        </a>
+    </div>
 
+    <div class="row mt-3 fw-bold text-secondary" style="font-size: 14px;">
+        <div class="col-1"><span class="order-label">Image</span></div>
+        <div class="col-4"><span class="order-label">Product</span></div>
+        <div class="col-1"><span class="order-label">Qty</span></div>
+        <div class="col-2"><span class="order-label">Amount</span></div>
+        <div class="col-2"><span class="order-label">Order Date</span></div>
+        <div class="col-2"><span class="order-label">Delivery Date</span></div>
+    </div>
 
-    @if ($isOrder > 0)
-        <div class="container mt-4  mb-2 pb-4" style="max-width: 1000px; border-radius:10px; border:1px solid rgb(0, 0, 0)">
+    @foreach ($orders as $order)
+        <div class="row order-row">
 
-            <div class="d-flex bd-highlight">
-                <h4 class="mt-3 flex-grow-1 bd-highlight">My Orders</h4>
-                <a href="{{ route('order.user_allorder_pdf') }}" class="mt-3 bd-highlight btn btn-primary">
-                    Download
-                </a>
-            </div>
-            <hr>
-
-            <div class="row pt-2" style="align-items: baseline;">
-
-                <div class="col-1">
-                    <label class=" mb-3">Image</label>
-                </div>
-                <div class="col-4">
-                    <label class=" mb-3">Product Name</label>
-                </div>
-                <div class="col-1">
-                    <label class=" mb-3">Quantity</label>
-                </div>
-                <div class="col-2">
-                    <label class=" mb-3">Amount</label>
-                </div>
-                <div class="col-2">
-                    <label class=" mb-3">Order Date</label>
-                </div>
-                <div class="col-2">
-                    <label class=" mb-3">Delivery Date</label>
-                </div>
-                <hr>
-
-
-
-                @foreach ($orders as $order)
-                    <div class="col-1">
-
-                        <div style="max-height: 50px !important; min-height: 50px !important;  max-width:50px;">
-                            <img src="{{ asset('storage/images/product/' . $order->product->image) }}"
-                                class="card-img-top mt-2" alt="product image"
-                                style="object-fit: fill;  border-radius:10px; max-height: 50px !important; min-height: 50px !important;">
-                        </div>
-
-                    </div>
-                    <div class="col-4">
-                        <div class="ms-2">
-                            <p> {{ $order->product->title }}</p>
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <p>{{ $order->quantity }}</p>
-                    </div>
-                    <div class="col-2">
-                        <p>₹ {{ $order->product->price * $order->quantity }}</p>
-                    </div>
-                    <div class="col-2">
-                        <p>{{ $order->created_at->format('M d, Y') }}</p>
-                    </div>
-                    <div class="col-2">
-                        <p>{{ $order->created_at->addDays(4)->format('M d, Y') }}</p>
-                    </div>
-                @endforeach
+            <div class="col-1">
+                <img src="{{ asset('storage/images/product/' . $order->product->image) }}" alt="Product" onerror="this.onerror=null;this.src='{{ asset('images/no_image.png') }}';">
             </div>
 
+            <div class="col-4">
+                <span class="order-title">{{ $order->product->title }}</span>
+            </div>
+
+            <div class="col-1">
+                <span>{{ $order->quantity }}</span>
+            </div>
+
+            <div class="col-2">
+                <span>₹ {{ $order->product->price * $order->quantity }}</span>
+            </div>
+
+            <div class="col-2">
+                <span>{{ $order->created_at->format('M d, Y') }}</span>
+            </div>
+
+            <div class="col-2">
+                <span>{{ $order->created_at->addDays(4)->format('M d, Y') }}</span>
+            </div>
 
         </div>
-    @else
-        <div class="container mt-2 mb-2">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">No Orders Found</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+    @endforeach
+
+</div>
+
+@else
+<div class="container mt-4">
+    <div class="no-orders-card">
+        <h5>No Orders Found</h5>
+        <p class="text-muted">You haven't placed any orders yet.</p>
+    </div>
+</div>
+@endif
+
 @endsection
 
+
 @section('scripts')
-    @if (session()->has('message'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: "{{ session('message') }}"
-            });
-        </script>
-    @endif
+@if (session()->has('message'))
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+    Toast.fire({
+        icon: "success",
+        title: "{{ session('message') }}"
+    });
+</script>
+@endif
 @endsection

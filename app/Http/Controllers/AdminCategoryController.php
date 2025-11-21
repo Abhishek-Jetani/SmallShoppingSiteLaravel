@@ -27,8 +27,10 @@ class AdminCategoryController extends Controller
                     return Str::limit($row->description, 50, '...');
                 })                
                 ->addColumn('image', function ($row) {
-                    $url = asset('storage/images/category/' . $row->image);
-                    return '<img src="' . $url . '" width="50px" height="50px" class="rounded" alt="Category Image" align="center" />';
+                    if (!$row->image) {
+                        return null;
+                    }
+                    return asset('storage/images/category/' . $row->image);
                 })
                 ->addColumn('status', function ($row) {
                     return $row->status == 1

@@ -1,149 +1,168 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Admin Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        .background-radial-gradient {
-            background-color: hsl(218, 41%, 15%);
-            background-image: radial-gradient(650px circle at 0% 0%,
-                    hsl(218, 41%, 35%) 15%,
-                    hsl(218, 41%, 30%) 35%,
-                    hsl(218, 41%, 20%) 75%,
-                    hsl(218, 41%, 19%) 80%,
-                    transparent 100%),
-                radial-gradient(1250px circle at 100% 100%,
-                    hsl(218, 41%, 45%) 15%,
-                    hsl(218, 41%, 30%) 35%,
-                    hsl(218, 41%, 20%) 75%,
-                    hsl(218, 41%, 19%) 80%,
-                    transparent 100%);
-        }
-
-        #radius-shape-1 {
-            height: 220px;
-            width: 220px;
-            top: -60px;
-            left: -130px;
-            background: radial-gradient(#44006b, #ad1fff);
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, #10131a, #1b1e28);
             overflow: hidden;
         }
 
-        #radius-shape-2 {
-            border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
-            bottom: -60px;
-            right: -110px;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(#44006b, #ad1fff);
-            overflow: hidden;
+        /* Moving animated circles (Apple style) */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: float 6s ease-in-out infinite alternate;
         }
 
-        .bg-glass {
-            background-color: hsla(0, 0%, 100%, 0.9) !important;
-            backdrop-filter: saturate(200%) blur(25px);
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: #6c00ff;
+            top: -100px;
+            left: -120px;
+        }
+
+        .shape-2 {
+            width: 600px;
+            height: 600px;
+            background: #00a2ff;
+            bottom: -150px;
+            right: -180px;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0px); }
+            to   { transform: translateY(40px); }
+        }
+
+        /* Glass Card */
+        .login-card {
+            backdrop-filter: blur(18px);
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.25);
+            animation: fadeUp 0.7s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        label {
+            font-weight: 500;
+            color: #d8d8d8;
+        }
+
+        .form-control {
+            background: rgba(255,255,255,0.12);
+            border: none;
+            color: white;
+        }
+
+        .form-control:focus {
+            background: rgba(255,255,255,0.16);
+            box-shadow: none;
+            border: 1px solid #0d6efd;
+            color: white;
+        }
+
+        .title-text {
+            color: white;
+            font-weight: 600;
+        }
+
+        .subtitle-text {
+            color: #d0d0d0;
+            font-size: 0.9rem;
+        }
+
+        .btn-main {
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 500;
         }
     </style>
-
 </head>
 
 <body>
+
     @if (session()->has('error'))
         <script>
             Swal.fire({
-                title: 'error!',
+                title: 'Error!',
                 text: '{{ session('error') }}',
                 icon: 'error',
-                showCancelButton: false,
-                showConfirmButton: false,
                 timer: 3000,
-            })
+                showConfirmButton: false,
+            });
         </script>
     @endif
 
+    <!-- Background Shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
 
-    <!-- Section: Design Block -->
-    <section class="background-radial-gradient overflow-hidden" style="height: 100vh;">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
 
-        <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-            <div class="row gx-lg-5 align-items-center mb-5">
-                <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                    <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                        ADMIN LOGIN <br />
-                        <span style="color: hsl(218, 81%, 75%)">Small Shopping Site </span>
-                    </h1>
-                    <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                        Creating an effective eCommerce website in 2024 requires a combination of aesthetics,
-                        functionality, and user experience. A clean layout with intuitive navigation is crucial to help
-                        users find products easily. High-quality images, including multiple angles and lifestyle shots,
-                        enhance product appeal. Responsive design ensures the website works seamlessly across different
-                        devices, while fast loading times reduce bounce rates. A user-friendly checkout process is
-                        essential for minimizing cart abandonment, and consistent branding reinforces the identity of
-                        your business.
-                    </p>
+        <div class="col-md-5 login-card text-white">
+            <h2 class="mb-1 title-text">Admin Login</h2>
+            <p class="mb-4 subtitle-text">Small Shopping Portal Dashboard</p>
+
+            <form method="POST" action="{{ route('admin.admin_login') }}">
+                @csrf
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input id="email" type="email"
+                        class="form-control @error('email') is-invalid @enderror"
+                        name="email" required autocomplete="email" autofocus>
+                    @error('email')
+                        <span class="text-danger small">{{ $message }}</span>
+                    @enderror
                 </div>
 
-                <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                    <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                    <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-
-                    <div class="card bg-glass">
-                        <div class="card-body px-4 py-5 px-md-5">
-                            <form method="POST" action="{{ route('admin.admin_login') }}">
-                                @csrf
-                                <!-- Email input -->
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example3">Email</label>
-                                    <input id="email" type="email"
-                                        class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ old('email') }}" required autocomplete="email" autofocus>
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <!-- Password input -->
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example4">Password</label>
-                                    <input id="password" type="password"
-                                        class="form-control @error('password') is-invalid @enderror" name="password"
-                                        required autocomplete="current-password">
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                    @if ($errors->any())
-                                        @foreach ($errors->all() as $error)
-                                            <div class="alert alert-danger mt-4">
-                                                {{ $error }}
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-
-                                <!-- Submit button -->
-                                <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                                    class="btn btn-primary btn-block mb-4">
-                                    Login
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                <!-- Password -->
+                <div class="mb-3">
+                    <label>Password</label>
+                    <input id="password" type="password"
+                        class="form-control @error('password') is-invalid @enderror"
+                        name="password" required autocomplete="current-password">
+                    @error('password')
+                        <span class="text-danger small">{{ $message }}</span>
+                    @enderror
                 </div>
-            </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn btn-primary btn-main">
+                    Login
+                </button>
+
+            </form>
         </div>
-    </section>
 
-
-
+    </div>
 
 </body>
-
 </html>

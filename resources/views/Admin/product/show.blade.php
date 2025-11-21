@@ -1,43 +1,134 @@
 @extends('layouts.admin_layout')
+
 @section('title')
     Product Details
 @endsection
+
 @section('styles')
     <style>
-        .container {
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        .apple-card {
+            background: #fff;
+            border: 1px solid #e3e3e3;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+            transition: 0.3s;
+        }
+
+        .apple-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #444;
+            width: 180px;
+            display: inline-block;
+        }
+
+        .detail-value {
+            color: #111;
+        }
+
+        .detail-row {
+            margin-bottom: 12px;
+        }
+
+        .product-img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid #ddd;
+        }
+
+        .btn-primary {
+            border-radius: 8px;
+        }
+
+        .btn-warning {
+            border-radius: 8px;
         }
     </style>
 @endsection
+
 @section('content')
-    <div class="mt-4">
-        <h2 class="float-start">Product Details</h2>
-        <a href="{{ route('product.index') }}" class="float-end btn btn-primary">Back to Products</a>
-    </div><br><br>
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h2 class="fw-bold mb-0">Product Details</h2>
+        <a href="{{ route('product.index') }}" class="btn btn-outline-secondary">Back to Products</a>
+    </div>
 
     <section class="main">
-        <div class="container pt-2 pb-2" style="background: white; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
-            <div class="card">
-                <div class="card-body">
-                    <p class="card-text"><strong>Title:</strong> {{ $product->title }}</p>
-                    <p class="card-text"><strong>Category Name:</strong> {{ $product->category->title }}</p> <!-- Assuming you have a relationship set up -->
-                    <p class="card-text"><strong>Image:</strong> <img
-                            src="{{ asset('storage/images/product/' . $product->image) }}" width="50px" height="50px"
-                            class="rounded" alt="product image" /></p>
-                    <p class="card-text"><strong>Short Description:</strong> {{ $product->short_desc }}</p>
-                    <p class="card-text"><strong>Full Description:</strong> {{ $product->full_desc }}</p>
-                    <p class="card-text"><strong>Status:</strong>
-                        @if ($product->status == 0)
-                            <span class="badge text-bg-danger">Deactivate</span>
-                        @else
-                            <span class="badge text-bg-success">Activate</span>
-                        @endif
-                    </p>
-                    <p class="card-text"><strong>Price:</strong> {{ $product->price }}</p>
-                    <p class="card-text"><strong>Quantity:</strong> {{ $product->quantity }}</p>
-                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-warning">Edit Product</a>
-                </div>
+        <div class="container apple-card">
+
+            {{-- Product Top Header --}}
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h4 class="fw-semibold">{{ $product->title }}</h4>
+                <a href="{{ route('product.edit', $product->id) }}" class="btn btn-warning">Edit Product</a>
             </div>
+
+            <div class="row">
+
+                {{-- Left Column --}}
+                <div class="col-md-8">
+
+                    <div class="detail-row">
+                        <span class="detail-label">Title:</span>
+                        <span class="detail-value">{{ $product->title }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Category:</span>
+                        <span class="detail-value">{{ $product->category->title }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Short Description:</span>
+                        <span class="detail-value">{{ $product->short_desc }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Full Description:</span>
+                        <span class="detail-value">{{ $product->full_desc }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Price:</span>
+                        <span class="detail-value">₹ {{ number_format($product->price) }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Quantity:</span>
+                        <span class="detail-value">{{ $product->quantity }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        @if ($product->status == 1)
+                            <span class="badge bg-success">Active</span>
+                        @else
+                            <span class="badge bg-danger">Inactive</span>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Right Column --}}
+                <div class="col-md-4 text-center">
+                    <img 
+                        src="{{ $product->image 
+                                ? asset('storage/images/product/' . $product->image) 
+                                : 'https://placehold.co/300x300?text=No+Image' 
+                            }}"
+                        class="product-img mb-2"
+                        alt="Product Image">
+
+                    <p class="text-muted">Product Image</p>
+                </div>
+
+            </div>
+
         </div>
     </section>
+
 @endsection

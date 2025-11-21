@@ -6,199 +6,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
 
-
-    {{-- website logo  --}}
+    {{-- favicon --}}
     <link rel="icon" type="image/x-icon" href="custom_images/website_logo.jpg">
-    {{-- font awesome  --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    {{-- bootstrap 5  --}}
+
+    {{-- font awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    {{-- bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     {{-- datatable --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="{{ asset('custom_css/admin/admin_layout.css') }}">
+    {{-- NEW BLUE THEME STYLE --}}
+    <style>
+        body {
+            background: #f4f6fc;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1e3c76 !important;
+            padding: 10px 20px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+        }
+
+        .navbar-brand,
+        .navbar .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .menu_column {
+            background: #ffffff;
+            border-right: 1px solid #e0e3ed;
+            min-height: 100vh;
+            padding-top: 20px;
+            animation: fadeSidebar 0.5s ease;
+        }
+
+        .home_ul li {
+            list-style: none;
+        }
+
+        .home_li {
+            padding: 14px 20px;
+            transition: 0.3s;
+            margin-bottom: 3px;
+        }
+
+        .home_li a {
+            color: #1e3c76;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .home_li:hover {
+            background: #1e3c76;
+        }
+
+        .home_li:hover a {
+            color: white;
+        }
+
+        .home_li.active {
+            background: #1e3c76;
+        }
+
+        .home_li.active a {
+            color: white;
+        }
+
+        /* Main content */
+        .content_column {
+            padding: 25px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: rgba(0, 0, 0, 0.05) 0 8px 24px;
+        }
+
+        /* Sidebar animation */
+        @keyframes fadeSidebar {
+            from {
+                opacity: 0;
+                transform: translateX(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
 
     @yield('styles')
-
 </head>
 
 <body>
 
-    <!--  header Wrapper -->
-    <div>
-        <div>
-            <nav class="navbar navbar-expand-sm ">
-                <div class="container-fluid">
-                    <a href="/admin" class="navbar-brand p-3 ms-3">Shopping Site</a>
-                    <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
-                        data-bs-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div id="navbarCollapse" class="collapse navbar-collapse">
-                        {{-- <ul class="nav navbar-nav">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Profile</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle"
-                                    data-bs-toggle="dropdown">Messages</a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item">Inbox</a>
-                                    <a href="#" class="dropdown-item">Drafts</a>
-                                    <a href="#" class="dropdown-item">Sent Items</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="#"class="dropdown-item">Trash</a>
-                                </div>
-                            </li>
-                        </ul> --}}
-                        <ul class="nav navbar-nav ms-auto">
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                    <img src="../assets/images/profile/user-1.jpg" alt="" width="35"
-                                        height="35" class="rounded-circle"> {{ Auth::user()->name }}
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="{{ route('admin.profile') }}" class="dropdown-item"><i
-                                            class="fa fa-user"></i> Profile</a>
-                                    <a href="{{ route('admin.changePassword') }}" class="dropdown-item"><i
-                                            class="fa fa-lock"></i> Change Password</a>
-                                    <a href="/password/reset" class="dropdown-item"><i class="fa fa-eye"></i> Forgot
-                                        Password</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="{{ route('logout') }}" class="dropdown-item"
-                                        onclick="event.preventDefault();
-                                            document.getElementById('logout-form').submit();">
-                                        <i class="ti ti-logout fs-6"></i>
-                                        <span class="text-danger"> <i class="fa fa-sign-out"></i> Log out</span>
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+    <!-- HEADER -->
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
 
-                                </div>
+            <a href="/admin" class="navbar-brand">Shopping Site</a>
+
+            <button class="navbar-toggler bg-light" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown me-3">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img src="../assets/images/profile/user-1.jpg" width="36" height="36"
+                                class="rounded-circle me-1">
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                    <i class="fa fa-user"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.changePassword') }}" class="dropdown-item">
+                                    <i class="fa fa-lock"></i> Change Password
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/password/reset" class="dropdown-item">
+                                    <i class="fa fa-key"></i> Forgot Password
+                                </a>
+                            </li>
+                            <li><hr></li>
+                            <li>
+                                <a href="{{ route('logout') }}" class="dropdown-item text-danger"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fa fa-sign-out"></i> Logout
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    class="d-none">@csrf</form>
                             </li>
                         </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-
-        <!--  body Wrapper -->
-        <div class="row m-0 p-0 border ">
-            <div class="col-2 menu_column m-0 p-0">
-
-
-                <ul class="home_ul mt-4 m-0 p-0">
-                    @php
-                        use Illuminate\Support\Facades\Route;
-                        use Illuminate\Support\Facades\Request;
-
-                        $currentRoute = Route::currentRouteName();
-                        $currentUrl = Request::path();
-                    @endphp
-
-                    <li class="nav-item home_li {{ $currentRoute == 'admin.dashboard' ? 'active' : '' }}">
-                        <a class="nav-link home_li_a" href="{{ route('admin.dashboard') }}">
-                            <span>
-                                <i class="fa fa-home"></i>
-                            </span>
-                            <span class="hide-menu">Dashboard</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item home_li {{ $currentRoute == 'admin.usersAllOrder' ? 'active' : '' }}">
-                        <a class="nav-link home_li_a" href="{{ route('admin.usersAllOrder') }}">
-                            <span>
-                                <i class="fa fa-shopping-bag"></i>
-                            </span>
-                            <span class="hide-menu">Manage Orders</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item home_li {{ Request::is('admin/category*') ? 'active' : '' }}">
-                        <a class="nav-link home_li_a" href="{{ route('category.index') }}">
-                            <span>
-                                <i class="fa fa-list"></i>
-                            </span>
-                            <span class="hide-menu">Manage Category</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item home_li {{ Request::is('admin/product*') ? 'active' : '' }}">
-                        <a class="nav-link home_li_a" href="{{ route('product.index') }}">
-                            <span>
-                                <i class="fa fa-product-hunt"></i>
-                            </span>
-                            <span class="hide-menu">Manage Products</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item home_li {{ Request::is('admin/customer*') ? 'active' : '' }}">
-                        <a class="nav-link home_li_a" href="{{ route('admin.manageCustomer.index') }}">
-                            <span>
-                                <i class="fa fa-users"></i>
-                            </span>
-                            <span class="hide-menu">Manage Customers</span>
-                        </a>
                     </li>
                 </ul>
 
             </div>
 
-            <div class="col-10 content_column m-0 p-0">
-                <div class="p-0 m-3 " style="background: #f0f0f0;">
-                    @yield('content')
-                </div>
+        </div>
+    </nav>
+
+    <!-- PAGE -->
+    <div class="row g-0">
+
+        <!-- SIDEBAR -->
+        <div class="col-2 menu_column">
+
+            <ul class="home_ul">
+                @php
+                    $currentRoute = Route::currentRouteName();
+                @endphp
+
+                <li class="home_li {{ $currentRoute == 'admin.dashboard' ? 'active' : '' }}">
+                    <a href="{{ route('admin.dashboard') }}">
+                        <i class="fa fa-home"></i> Dashboard
+                    </a>
+                </li>
+
+                <li class="home_li {{ $currentRoute == 'admin.usersAllOrder' ? 'active' : '' }}">
+                    <a href="{{ route('admin.usersAllOrder') }}">
+                        <i class="fa fa-shopping-bag"></i> Manage Orders
+                    </a>
+                </li>
+
+                <li class="home_li {{ Request::is('admin/category*') ? 'active' : '' }}">
+                    <a href="{{ route('category.index') }}">
+                        <i class="fa fa-folder"></i> Manage Category
+                    </a>
+                </li>
+
+                <li class="home_li {{ Request::is('admin/product*') ? 'active' : '' }}">
+                    <a href="{{ route('product.index') }}">
+                        <i class="fa fa-box"></i> Manage Products
+                    </a>
+                </li>
+
+                <li class="home_li {{ Request::is('admin/customer*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.manageCustomer.index') }}">
+                        <i class="fa fa-users"></i> Manage Customers
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="col-10 content_column">
+            <div class="content-card">
+                @yield('content')
             </div>
         </div>
 
     </div>
 
-    {{-- JQuery  --}}
+    {{-- JS Libraries --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    {{-- sweet alert  --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 
-
-
-    @if (session()->has('success'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: "{{ session('success') }}"
-            });
-        </script>
+    {{-- Alerts --}}
+    @if(session()->has('success'))
+    <script>
+        Swal.fire({ icon: "success", title: "{{ session('success') }}", timer: 2000, showConfirmButton: false });
+    </script>
     @endif
-    @if (session()->has('error'))
-        <script>
-            Swal.fire({
-                title: 'Error!',
-                text: '{{ session('error') }}',
-                icon: 'error',
-                showCancelButton: false,
-                showConfirmButton: false,
-                timer: 5000,
-            })
-        </script>
+
+    @if(session()->has('error'))
+    <script>
+        Swal.fire({ icon: "error", title: "{{ session('error') }}", timer: 2000, showConfirmButton: false });
+    </script>
     @endif
 
     @yield('scripts')

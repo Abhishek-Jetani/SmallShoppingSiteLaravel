@@ -7,388 +7,188 @@
 @endsection
 
 @section('styles')
-    <!-- Date filter -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-        .all_content {
-            height: 100%;
-            margin: 0px 20px 20px 20px;
-        }
+<style>
+    body {
+        background: #f3f4f7;
+        font-family: "Inter", sans-serif;
+    }
 
-        .row>.col-sm-4 {
-            padding: 10px;
-        }
+    /* Page title */
+    h2 {
+        font-weight: 700;
+        color: #2e2e2e;
+    }
 
-        .quantity {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .nav-link-dashboard-first{
-            text-decoration: none;
-        }
-        
-        /* filter by date and today,week,month,year  */
-        .nav-tabs-dashboard {
-            border-radius: 5px;
-            border: 1px solid #6f42c1;
-        }
-        
-        .nav-tabs-dashboard .nav-link-dashboard {
-            border-radius: 5px;
-            color: #6c757d;
-        }
-        
-        .nav-tabs-dashboard .nav-link-dashboard.active {
-            color: #fff;
-            background-color: #6f42c1;
-            border-color: #6f42c1;
-        }
+    /* Stat Cards */
+    .stat-card {
+        border: none;
+        border-radius: 16px;
+        color: #fff;
+        padding: 22px 18px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        transition: 0.25s;
+        cursor: pointer;
+    }
 
-        #send-filter-btn {
-            display: flex;
-            align-items: center;
-        }
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 26px rgba(0,0,0,0.20);
+    }
 
-        #send-filter-btn .bi {
-            margin-right: 5px;
-        }
+    .stat-icon {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        font-size: 65px;
+        opacity: 0.12;
+    }
 
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+    }
 
-        /* top selling products table   */
-        .table tbody {
-            background-color: #f5f5f5;
-        }
+    .stat-label {
+        font-size: 15px;
+        margin-top: 4px;
+        opacity: 0.9;
+    }
 
-        .productNameColumn,
-        .productImageColumn {
-            cursor: pointer;
-        }
+    .main-wrapper {
+        padding: 25px;
+    }
 
-        .productImage {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-        }
-    </style>
+    /* Background colors */
+    .bg-blue { background: linear-gradient(135deg,#2e81ff,#005df4); }
+    .bg-green { background: linear-gradient(135deg,#2abf55,#13923c); }
+    .bg-yellow { background: linear-gradient(135deg,#ffc94c,#d49806); }
+    .bg-red { background: linear-gradient(135deg,#ff5a48,#c00f01); }
+
+    /* Top Selling Products Table */
+    .table-product img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 2px solid #e4e4e4;
+    }
+
+    .table-product tbody tr {
+        transition: 0.2s;
+        cursor: pointer;
+    }
+    .table-product tbody tr:hover {
+        background: #fafafa;
+    }
+
+</style>
 @endsection
 
-@section('content')
-    {{-- cards for total  orders,products,revenue,customers   --}}
-    <section class="main mt-4">
-        <h2>Dashboard</h2>
-        <div class="container">
-            <div class="all_content pt-4 pb-2">
-                <div class="row mb-3">
-                    <div class="col-sm-3">
-                        <div class="card m-0" style="background: rgb(13, 140, 203);">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity text-light m-0">{{ $UserCount }}</label>
-                                    <h5 class="card-text text-light">Customers</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-user"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                            <hr class="m-0">
-                            <a href="{{ route('admin.manageCustomer.index') }}" class="nav-link-dashboard-first">
-                                <div class="footer rounded-bottom" style="background: rgb(6, 115, 170);">
-                                    <div class="text-light p-1 more-info-dashboard " style="text-align: center;"> More info <i
-                                            class="fa fa-arrow-circle-o-right"></i> </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="card m-0" style="background: rgb(16, 167, 16);">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity text-light  m-0">{{ $ProductCount }}</label>
-                                    <h5 class="card-text text-light ">Products</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-product-hunt"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                            <hr class="m-0">
-                            <a href="{{ route('product.index') }}" class="nav-link-dashboard-first">
-                                <div class="footer rounded-bottom" style="background: rgb(7, 138, 7)">
-                                    <div class="text-light p-1 more-info-dashboard " style="text-align: center;"> More info <i
-                                            class="fa fa-arrow-circle-o-right"></i> </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="card m-0" style="background: rgb(241, 184, 15);">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity text-light m-0">{{ $TotalRevenue }}</label>
-                                    <h5 class="card-text text-light ">Revenue</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-list-alt"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                            <hr class="m-0">
-                            <a href="{{ route('category.index') }}" class="nav-link-dashboard-first">
-                                <div class="footer rounded-bottom" style="background:  rgb(152, 117, 12);">
-                                    <div class="text-light p-1 more-info-dashboard " style="text-align: center;"> More info <i
-                                            class="fa fa-arrow-circle-o-right"></i> </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="card m-0" style="background:  rgb(212, 47, 14);">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity text-light  m-0">{{ $OrderCount }}</label>
-                                    <h5 class="card-text text-light ">Orders</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-shopping-cart"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                            <hr class="m-0">
-                            <a href="{{ route('admin.usersAllOrder') }}" class="nav-link-dashboard-first">
-                                <div class="footer rounded-bottom" style="background: rgb(146, 37, 15);">
-                                    <div class="text-light p-1 more-info-dashboard " style="text-align: center;"> More info <i
-                                            class="fa fa-arrow-circle-o-right"></i> </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    {{-- filter by date and many more  --}}
-    {{-- <div class="container mt-4 d-flex justify-content-between align-items-center">
-        <ul class="nav nav-tabs-dashboard nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link-dashboard nav-link active" id="today-tab" href="#">Today</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link-dashboard nav-link" id="week-tab" href="#">Week</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link-dashboard nav-link" id="month-tab" href="#">Month</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link-dashboard nav-link" id="year-tab" href="#">Year</a>
-            </li>
-        </ul>
-        <div class="d-flex align-items-center">
-            <div class="input-group date">
-                <input type="text" class="form-control me-2" id="date_range" name="date_range"
-                    placeholder="Select Date Range">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
+@section('content')
+
+<div class="main-wrapper">
+        
+    <!-- Header -->
+    <h2 class="mb-4">Dashboard</h2>
+
+    <!-- Stats Row -->
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <a href="{{ route('admin.manageCustomer.index') }}" class="text-decoration-none">
+                <div class="stat-card bg-blue">
+                    <div class="stat-value">{{ $UserCount }}</div>
+                    <div class="stat-label">Customers</div>
+                    <i class="fa fa-user stat-icon"></i>
                 </div>
-            </div>
-            <button class="btn btn-primary" id="send-filter-btn">
-                <i class="fa fa-filter"></i>
-            </button>
+            </a>
         </div>
+
+        <div class="col-md-3">
+            <a href="{{ route('product.index') }}" class="text-decoration-none">
+                <div class="stat-card bg-green">
+                    <div class="stat-value">{{ $ProductCount }}</div>
+                    <div class="stat-label">Products</div>
+                    <i class="fa fa-product-hunt stat-icon"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ route('category.index') }}" class="text-decoration-none">
+                <div class="stat-card bg-yellow">
+                    <div class="stat-value">{{ $TotalRevenue }}</div>
+                    <div class="stat-label">Revenue</div>
+                    <i class="fa fa-list-alt stat-icon"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ route('admin.usersAllOrder') }}" class="text-decoration-none">
+                <div class="stat-card bg-red">
+                    <div class="stat-value">{{ $OrderCount }}</div>
+                    <div class="stat-label">Orders</div>
+                    <i class="fa fa-shopping-cart stat-icon"></i>
+                </div>
+            </a>
+        </div>
+
     </div>
 
-    <section class="main">
-        <div class="container">
-            <div class="all_content pt-4 pb-2">
-                <div class="row mb-3">
-                    <div class="col-sm-3">
-                        <div class="card m-0 bg-white">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity  m-0" id="todayOrdersCount">0</label>
-                                    <h5 class="card-text ">Orders</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-shopping-cart"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="card m-0 bg-white">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity m-0" id="todaySales">0.00</label>
-                                    <h5 class="card-text">Total Sales</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-dollar-sign"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="card m-0 bg-white">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity m-0" id="averageSales">0.00</label>
-                                    <h5 class="card-text">Avg. Sales</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-chart-line"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="card m-0 bg-white">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-2">
-                                    <label class="quantity m-0" id="todayCustomers">0</label>
-                                    <h5 class="card-text">Customers</h5>
-                                </div>
-                                <div class="align-content-center">
-                                    <p class="m-0 pe-3"><i class="fa fa-user"
-                                            style="font-size:60px; color:rgba(35, 34, 34, 0.174);"></i></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
 
+    <!-- Top Selling Products -->
+    @if(isset($topSellingProducts) && count($topSellingProducts) > 0)
+    <div class="mt-5">
+        <h4 class="fw-bold mb-3">Top Selling Products</h4>
 
-
-
-
-    {{-- top selling products --}}
-    {{-- <section class="main mt-4">
-        <h2>Top Selling Products</h2>
-        <div class="container">
-            <div class="all_content pt-4 pb-2">
-                <table class="table">
-                    <thead>
+        <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-product align-middle mb-0">
+                    <thead class="bg-light">
                         <tr>
-                            <th scope="col">Index</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Quantity Sold</th>
-                            <th scope="col">Price</th>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Sold</th>
+                            <th>Price</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @foreach ($topSellingProducts as $key => $product)
-                            <tr>
-                                <th scope="row">{{ $key + 1 }}</th>
-                                <td class="productImageColumn"
-                                    onclick="window.location='{{ route('product.show', $product->product_id) }}'">
-                                    <img src="{{ asset('storage/images/product/' . $product->product->image) }}"
-                                        class="productImage" alt="Product Image">
-                                </td>
-                                <td class="productNameColumn"
-                                    onclick="window.location='{{ route('product.show', $product->product_id) }}'">
-                                    {{ $product->product->title }}</td>
-                                <td>{{ $product->total_quantity }}</td>
-                                <td>{{ $product->product->price }}</td>
-                            </tr>
+                        <tr onclick="window.location='{{ route('product.show', $product->product_id) }}'">
+                            <td>{{ $key + 1 }}</td>
+                            <td>
+                                @if(isset($product->product->image) && file_exists(public_path('storage/images/product/'.$product->product->image)))
+                                    <img src="{{ asset('storage/images/product/' . $product->product->image) }}" />
+                                @else
+                                    <img src="https://via.placeholder.com/50x50?text=No+Img" />
+                                @endif
+                            </td>
+                            <td>{{ $product->product->title }}</td>
+                            <td>{{ $product->total_quantity }}</td>
+                            <td>{{ $product->product->price }}</td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
-    </section> --}}
+
+    </div>
+    @endif
+
+</div>
+
 @endsection
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-
-    {{-- <script>
-        $(document).ready(function() {
-
-            function fetchStats(rangeType = null, startDate = null, endDate = null) {
-                $.ajax({
-                    url: '{{ route('admin.dashboard.stats') }}',
-                    method: 'GET',
-                    data: {
-                        range: rangeType,
-                        start_date: startDate,
-                        end_date: endDate
-                    },
-                    success: function(response) {
-                        $('#todayOrdersCount').text(response.orders);
-                        $('#todaySales').text(response.sales.toFixed(2));
-                        $('#averageSales').text(response.averageSales.toFixed(2));
-                        $('#todayCustomers').text(response.customers);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching stats:', error);
-                    }
-                });
-            }
-
-            // Default fetch stats for "Today"
-            fetchStats('today');
-
-            $('.nav-link').click(function(event) {
-                event.preventDefault();
-                $('.nav-link').removeClass('active');
-                $(this).addClass('active');
-
-                let rangeType;
-                switch ($(this).attr('id')) {
-                    case 'today-tab':
-                        rangeType = 'today';
-                        break;
-                    case 'week-tab':
-                        rangeType = 'week';
-                        break;
-                    case 'month-tab':
-                        rangeType = 'month';
-                        break;
-                    case 'year-tab':
-                        rangeType = 'year';
-                        break;
-                    default:
-                        return;
-                }
-
-                fetchStats(rangeType);
-            });
-
-            flatpickr("#date_range", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                onClose: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length === 2) {
-                        const [startDate, endDate] = selectedDates.map(date => date.toISOString().split(
-                            'T')[0]);
-                        fetchStats(null, startDate, endDate);
-                    }
-                }
-            });
-
-            $('#send-filter-btn').click(function() {
-                const dateRange = $('#date_range').val().split(' to ');
-                if (dateRange.length === 2) {
-                    const [startDate, endDate] = dateRange;
-                    fetchStats(null, startDate, endDate);
-                }
-            });
-
-
-        });
-    </script> --}}
 @endsection

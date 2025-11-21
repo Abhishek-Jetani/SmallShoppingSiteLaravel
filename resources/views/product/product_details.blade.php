@@ -1,346 +1,289 @@
-{{-- products/product_details.blade.php  --}}
-
 @extends('layouts.user_layout')
 @section('title')
     Product Details
 @endsection
 
 @section('styles')
-    <style>
-        .product-container {
-            display: flex;
-            margin: 10px 80px 20px 80px;
-        }
+<style>
 
-        .left-column {
-            flex: 1;
-            margin-right: 20px;
-            max-height: 500px;
-            min-height: 250px;
-            border: 2px solid #bbb;
-            padding: 10px;
-            border-radius: 15px;
-        }
+    /* Page Layout */
+    .product-container {
+        display: flex;
+        gap: 40px;
+        margin: 40px auto;
+        max-width: 1200px;
+        animation: fadeIn 0.5s ease-in-out;
+    }
 
-        .left-column img {
-            width: 100%;
-            height: auto;
-            object-fit: fill;
-            border-radius: 15px;
-        }
+    /* Image Section */
+    .left-column {
+        flex: 1;
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 15px;
+    }
 
+    .left-column img {
+        width: 100%;
+        border-radius: 12px;
+        object-fit: contain;
+        max-height: 420px;
+    }
 
-        .right-column {
-            flex: 2;
-        }
+    /* Right Section */
+    .right-column {
+        flex: 2;
+        padding-top: 10px;
+    }
 
-        .product-description {
-            margin-bottom: 10px;
-        }
+    h1 {
+        font-size: 34px;
+        font-weight: 700;
+    }
 
-        .category {
-            font-weight: bold;
-            font-size: 18px;
-        }
+    h4 {
+        font-size: 19px;
+        color: #555;
+    }
 
-        .product-description h1 {
-            font-size: 40px;
-        }
+    .full-desc {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 15px;
+        color: #444;
+    }
 
-        .product-description h4 {
-            font-size: 20px;
-        }
+    .price {
+        font-size: 30px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-top: 5px;
+        display: block;
+    }
 
-        .full-desc {
-            max-height: 100px;
-            overflow: hidden;
-            font-size: 16px;
-        }
+    /* Buttons */
+    .cart-btn, .wishlist-btn {
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: 0.25s;
+        box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+        margin-right: 8px;
+    }
 
+    .cart-btn {
+        background: #ff4733;
+        color: white;
+        border: none;
+    }
 
-        .read-more {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            color: blue;
-            font-size: 16px;
-        }
+    .cart-btn:hover {
+        background: #d63725;
+    }
 
-        .status {
-            margin-right: 10px;
-        }
+    .wishlist-btn {
+        border: 1px solid black;
+        background: white;
+        color: black;
+    }
 
-        .text-green {
-            color: green;
-        }
+    .wishlist-btn:hover {
+        background: black;
+        color: white;
+    }
 
-        .text-danger {
-            color: red;
-        }
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
 
-        .cart-btn {
-            background-color: rgb(255, 47, 0);
-            color: white;
-        }
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 
-        .cart-btn:hover {
-            background-color: rgb(208, 44, 7);
-            color: white;
-        }
-
-        .wishlist-btn {
-            background-color: rgb(255, 255, 255);
-            color: rgb(0, 0, 0);
-            padding: 8px 12px;
-            border: 1px solid black;
-            border-radius: 10px;
-            margin: 12px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 16px;
-            text-align: center;
-            width: 150px;
-        }
-
-        .wishlist-btn:hover {
-            text-decoration: none;
-            color: white;
-            background: black;
-        }
-
-
-        .price {
-            font-size: 26px;
-            font-weight: 500;
-        }
-
-        .disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        #quantity-error {
-            color: red;
-            display: block;
-        }
-    </style>
+</style>
 @endsection
+
+
 @section('content')
-    @foreach ($Products as $product)
-        <div class="container">
-            <div class="product-container">
-                <!-- Left Column / Headphones Image -->
-                <div class="left-column">
-                    <img data-image="red" class="active" src="{{ asset('storage/images/product/' . $product->image) }}"
-                        style="max-height: 350px; min-height: 350px;" alt="product">
-                </div>
+@foreach ($Products as $product)
+    <div class="container">
 
-                <!-- Right Column -->
-                <div class="right-column">
-                    <!-- Product Description -->
-                    <div class="product-description pt-3">
-                        <h1>{{ $product->title }}</h1>
-                        <h4>{{ $product->short_desc }}</h4>
-                        <p class="full-desc">{{ $product->full_desc }}</p>
-                        <span class="price" id="base-price">{{ $product->price }}</span>
-                    </div>
+        <div class="product-container">
+
+            <!-- Product Image -->
+            <div class="left-column">
+
+                @php
+                    $imagePath = public_path('storage/images/product/' . $product->image);
+                @endphp
+
+                <img
+                    src="{{ file_exists($imagePath)
+                            ? asset('storage/images/product/' . $product->image)
+                            : asset('images/no_image.png') }}"
+                    alt="{{ $product->title }}">
+            </div>
 
 
-                    @if ($product->quantity <= 10 && $product->quantity >= 1)
-                        <h5 class="text-danger d-inline">Hurry up </h5>
-                        <h5 class="text-danger d-inline">Only {{ $product->quantity }} Quantity left</h5>
-                    @elseif ($product->quantity <= 0)
-                        <h5 class="text-danger">Out Of Stocks</h5>
+            <!-- Details Section -->
+            <div class="right-column">
+
+                <h1>{{ $product->title }}</h1>
+                <h4>{{ $product->short_desc }}</h4>
+
+                <p class="full-desc">{{ $product->full_desc }}</p>
+
+                <span class="price">₹ {{ $product->price }}</span>
+
+                {{-- Stock Warning --}}
+                @if ($product->quantity <= 10 && $product->quantity >= 1)
+                    <p class="text-danger fw-bold">Hurry! Only {{ $product->quantity }} left in stock!</p>
+                @elseif ($product->quantity <= 0)
+                    <p class="text-danger fw-bold">Out of Stock</p>
+                @endif
+
+
+                {{-- Buttons --}}
+                <div class="mt-3">
+
+                    {{-- Cart --}}
+                    @if ($cartItem)
+                        <a href="{{ route('cart.index') }}" class="cart-btn btn">
+                            Go to Cart
+                        </a>
+                    @else
+                        <button class="cart-btn add-to-cart {{ $product->quantity <= 0 ? 'disabled' : '' }}"
+                                data-product-id="{{ $product->id }}">
+                            Add to Cart
+                        </button>
                     @endif
 
 
-
-
-                    <div class="product-actions">
-                        @if ($cartItem)
-                            <a href="{{ route('cart.index') }}" class="btn cart-btn">
-                                Go to cart
-                            </a>
-                        @else
-                            <button class="ms-1 btn add-to-cart cart-btn {{ $product->quantity <= 0 ? 'disabled' : '' }}"
-                                data-product-id="{{ $product->id }}">
-                                Add to Cart
+                    {{-- Wishlist --}}
+                    @if ($wishlistItem)
+                        <a href="{{ route('wishlist.index') }}"
+                           class="wishlist-btn btn">
+                           ❤️ Go To Wishlist
+                        </a>
+                    @else
+                        @if (Auth::check())
+                            <button class="wishlist-btn add-to-wishlist"
+                                    data-product-id="{{ $product->id }}">
+                                Add to Wishlist
                             </button>
                         @endif
-
-
-                        @if ($wishlistItem)
-                            <a href="{{ route('wishlist.index') }}" class="btn btn-outline-dark">
-                                <i style="color: red;" class="fa fa-heart"></i> Go To Wishlist
-                            </a>
-                        @else
-                            @if (Auth::check())
-                                <button class="add-to-wishlist ms-1 btn btn-outline-dark"
-                                    data-product-id="{{ $product->id }}">
-                                    Add to Wishlist
-                                </button>
-                            @endif
-                        @endif
-
-                    </div>
+                    @endif
 
                 </div>
+
             </div>
         </div>
-    @endforeach
+
+    </div>
+@endforeach
 @endsection
 
+
+
 @section('scripts')
-    @if (session('success'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: "{{ session('success') }}"
-            });
-        </script>
-    @endif
 
-    @if (session('error'))
-        <script>
-            Swal.fire({
-                title: 'Error!',
-                text: '{{ session('error') }}',
-                icon: 'error',
-                showCancelButton: false,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-        </script>
-    @endif
-    {{-- validation  --}}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: "{{ session('success') }}",
+        showConfirmButton: false,
+        timer: 2000
+    });
+</script>
+@endif
 
-    <script>
-        $(document).ready(function() {
 
-            function isAuthenticated() {
-                return {{ auth()->check() ? 'true' : 'false' }};
+@if (session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: "{{ session('error') }}",
+        showConfirmButton: false,
+        timer: 3000
+    });
+</script>
+@endif
+
+
+<script>
+    $(function() {
+
+        function isAuthenticated() {
+            return {{ auth()->check() ? 'true' : 'false' }};
+        }
+
+        function redirectToLogin() {
+            window.location.href = "{{ route('login') }}";
+        }
+
+
+        /* Add to Cart */
+        $(".add-to-cart").click(function() {
+
+            if (!isAuthenticated()) {
+                redirectToLogin();
+                return;
             }
 
-            function redirectToLogin() {
-                window.location.href = "{{ route('login') }}";
-            }
+            var id = $(this).data("product-id");
 
-            // add to cart 
-            $(".add-to-cart").click(function() {
+            $.post('/add-to-cart/' + id, {
+                _token: '{{ csrf_token() }}',
+            }, function(res) {
 
-                if (!isAuthenticated()) {
-                    redirectToLogin();
-                    return;
+                if (res.success) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Cart',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    window.location.href = "{{ route('cart.index') }}";
                 }
-
-                var productId = $(this).data("product-id");
-                var csrfToken = '{{ csrf_token() }}';
-                var button = $(this);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/add-to-cart/' + productId,
-                    data: {
-                        _token: csrfToken,
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // show toast
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 2000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                            });
-                            Toast.fire({
-                                icon: "success",
-                                title: "Product added to the cart successfully"
-                            });
-
-                            var cartUrl = "{{ route('cart.index') }}";
-                            button.text("Go to Cart");
-                            button.wrap("<a href='" + cartUrl + "'></a>");
-                            button.off('click');
-
-                            // Update the cart count
-                            updateCartCount();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error adding product to cart:", error);
-                    }
-                });
             });
-
-
-
-
-
-
-
-            // add to wishlist
-            $(".add-to-wishlist").click(function() {
-                var productId = $(this).data("product-id");
-                var csrfToken = '{{ csrf_token() }}';
-                var button = $(this);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/add-to-wishlist/' + productId,
-                    data: {
-                        _token: csrfToken
-                    },
-                    success: function(response) {
-                        if (response.success) {
-
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                            });
-                            Toast.fire({
-                                icon: "success",
-                                title: "Product added in wishlist",
-                            });
-
-                            var wishlistUrl = "{{ route('wishlist.index') }}";
-                            button.text("Go to Wishlist");
-                            button.off("click");
-                            button.wrap("<a href='" + wishlistUrl +
-                                "'></a>");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error adding product to wishlist:", error);
-                    }
-                });
-            });
-
         });
-    </script>
+
+
+        /* Add to Wishlist */
+        $(".add-to-wishlist").click(function() {
+
+            var id = $(this).data("product-id");
+
+            $.post('/add-to-wishlist/' + id, {
+                _token: '{{ csrf_token() }}',
+            }, function(res) {
+
+                if (res.success) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Wishlist',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    window.location.href = "{{ route('wishlist.index') }}";
+                }
+
+            });
+        });
+
+    });
+</script>
+
 @endsection

@@ -1,123 +1,188 @@
 @extends('layouts.admin_layout')
-@section('title')
-    Create Category
-@endsection
+@section('title', 'Create Category')
+
 @section('styles')
-    <style>
-        .form-group {
-            padding-top: 10px;
-        }
+<style>
+    .fade-in {
+        animation: fadeIn 0.45s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
 
-        form .error {
-            color: rgb(233, 24, 24);
-        }
+    .card-modern {
+        background: #ffffff;
+        border-radius: 20px;
+        border: none;
+        padding: 28px;
+        box-shadow: 0 6px 26px rgba(0, 0, 0, 0.08);
+    }
 
-        .container {
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        }
-    </style>
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .btn-main {
+        background: #0055b0;
+        color: #fff;
+        padding: 8px 18px;
+        border-radius: 10px;
+        transition: 0.2s;
+    }
+    .btn-main:hover {
+        background: #054c9c;
+    }
+
+    .btn-reset {
+        background: #ddd;
+        padding: 8px 18px;
+        border-radius: 10px;
+        margin-right: 10px;
+    }
+
+    .error {
+        color: #d93025;
+        font-size: 0.9rem;
+        margin-top: 3px;
+        display: block;
+    }
+</style>
 @endsection
+
 @section('content')
-    <h2 class="mt-4">Add Category</h2>
-    <section class="main">
-        <div class="container pt-2" style="background: white;">
-            <form action="{{ route('category.store') }}" id="signupForm" method="POST" name="registration"
-                enctype="multipart/form-data">
-                @csrf
+<div class="fade-in">
 
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="exampleInputEmail1">Title</label>
-                        <input type="text" class="mb-2 form-control" id="title" name="title"
-                            value="{{ old('title') }}">
-                        @error('title')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
+    <h2 class="fw-bold mb-4">➕ Add Category</h2>
 
-                    <div class="col-md-6 form-group">
-                        <label for="exampleInputEmail1">Description</label>
-                        <input type="text" class="mb-2 form-control" id="description" name="description"
-                            value="{{ old('description') }}">
-                        @error('description')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
+    <div class="card-modern mx-auto">
 
+        <form action="{{ route('category.store') }}" 
+              id="signupForm" 
+              method="POST" 
+              enctype="multipart/form-data">
 
-                    <div class="col-md-12">
-                        <label for="status">Status </label>
-                        <select class="mb-2 form-select" name="status" id="status" value=" {{ old('status') }} ">
-                            <option value=""> Select status </option>
-                            <option value="1"> Activate </option>
-                            <option value="0">Deactivate</option>
-                        </select>
-                        @error('status')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-12">
-                        <label for="image">Image</label>
-                        <input type="file" class="mb-2 form-control" name="image" id="image"
-                            accept="image/png, image/gif, image/jpeg" value="{{ old('image') }}">
-                        @error('image')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
+            @csrf
 
-                    <div class="col-12 mb-2">
-                        <button type="submit" class=" float-end btn btn-primary">Add Category</button>
-                        <button type="reset" class=" float-end btn btn-secondary me-1">Reset</button>
-                    </div>
+            <div class="row">
+
+                <!-- Title -->
+                <div class="col-md-6 mb-3">
+                    <label>Title</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="title" 
+                           name="title"
+                           value="{{ old('title') }}"
+                           placeholder="Enter category title">
+                    @error('title')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
                 </div>
-            </form>
-        </div>
-    </section>
+
+                <!-- Description -->
+                <div class="col-md-6 mb-3">
+                    <label>Description</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="description" 
+                           name="description"
+                           value="{{ old('description') }}"
+                           placeholder="Short description">
+                    @error('description')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-12 mb-3">
+                    <label>Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Select Status</option>
+                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Activate</option>
+                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Deactivate</option>
+                    </select>
+                    @error('status')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Image -->
+                <div class="col-md-12 mb-3">
+                    <label>Image</label>
+                    <input type="file" 
+                           class="form-control" 
+                           name="image" 
+                           id="image"
+                           accept="image/png, image/gif, image/jpeg">
+                    @error('image')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-12 text-end">
+                    <button type="reset" class="btn-reset">Reset</button>
+                    <button type="submit" class="btn-main">Add Category</button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
 @endsection
+
 
 @section('scripts')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 
-    <script>
-        $().ready(function() {
+<script>
+$(function() {
 
-            $("#signupForm").validate({
+    $("#signupForm").validate({
 
-                rules: {
+        rules: {
+            title: "required",
+            description: {
+                required: true,
+                minlength: 3,
+            },
+            status: {
+                required: true,
+            },
+            image: {
+                required: true,
+                accept: "image/jpg,image/jpeg,image/png,image/gif",
+            }
+        },
 
-                    title: "required",
-                    description: {
-                        required: true,
-                        minlength: 3,
-                    },
-                    status: {
-                        required: true,
-                    },
-                    image: {
-                        required: true,
-                        accept: "image/jpg,image/jpeg,image/png,image/gif",
-                    }
-                },
-                messages: {
-                    title: "Title field is required",
-                    description: {
-                        required: "Description field is required",
-                        minlength: "Enter at least 3 letter",
-                    },
-                    status: {
-                        required: "Status field is required",
-                    },
-                    image: {
-                        required: "Image field is required",
-                        accept: "Image must be a file of type: png, jpg, jpeg.",
-                    }
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
-        });
-    </script>
+        messages: {
+            title: "Title is required",
+            description: {
+                required: "Description is required",
+                minlength: "At least 3 characters needed",
+            },
+            status: "Please select a status",
+            image: {
+                required: "Please upload an image",
+                accept: "Allowed formats: png, jpg, jpeg, gif",
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+
+});
+</script>
 @endsection

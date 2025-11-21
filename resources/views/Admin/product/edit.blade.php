@@ -1,215 +1,183 @@
 @extends('layouts.admin_layout')
+
 @section('title')
-    Edit Products
+    Edit Product
 @endsection
+
 @section('styles')
     <style>
+        .apple-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 25px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            transition: 0.3s ease;
+        }
+
+        .apple-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            border-radius: 10px !important;
+            transition: 0.15s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #0071e3 !important;
+            box-shadow: 0 0 0 2px rgba(0,113,227,0.2) !important;
+        }
+
         .form-group {
-            padding-top: 10px;
+            margin-bottom: 18px;
         }
 
-        form .error {
-            color: rgb(233, 24, 24);
+        .btn-primary {
+            background: #0071e3;
+            border-radius: 10px;
+            padding: 10px 20px;
         }
 
-        .container {
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        .btn-primary:hover {
+            background: #005bbd;
+        }
+
+        .preview-img {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
         }
     </style>
 @endsection
+
 @section('content')
-    <h2 class="mt-4">Edit Product</h2>
+    
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h2 class="mb-0 fw-bold">Edit Product</h2>
+        <a href="{{ route('product.index') }}" class="btn btn-outline-secondary">Back</a>
+    </div>
+
     <section class="main">
-        <div class="container pt-2" style="background: white; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
-            <form action="{{ route('product.update', $product->id) }}" id="myForm" method="POST" name="register"
-                enctype="multipart/form-data">
+        <div class="container apple-card">
+            <form action="{{ route('product.update', $product->id) }}" id="myForm"
+                method="POST" enctype="multipart/form-data">
+
                 @csrf
                 @method('PUT')
 
-                <div class="row pt-2">
+                <div class="row">
+
                     <div class="col-md-6 form-group">
-                        <label for="exampleInputEmail1">Title</label>
-                        <input type="text" class="mb-2 form-control" id="title" name="title"
-                            placeholder="Enter category title" value="{{ $product->title }}">
+                        <label>Title</label>
+                        <input type="text" class="form-control" name="title"
+                            value="{{ $product->title }}" placeholder="Product title">
                         @error('title')
-                            <div class="error text-danger">{{ $message }}</div>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <div class="col-md-6 form-group">
-                        <label for="exampleInputEmail1">Short description</label>
-                        <input type="text" class="mb-2 form-control" id="short_desc" name="short_desc"
-                            placeholder="Enter product short description" value="{{ $product->short_desc }}">
+                        <label>Short Description</label>
+                        <input type="text" class="form-control" name="short_desc"
+                            value="{{ $product->short_desc }}" placeholder="Short description">
                         @error('short_desc')
-                            <div class="error text-danger">{{ $message }}</div>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
+
                 </div>
 
-                <div class="row pt-2">
-                    <div class="col-md-12 form-group">
-                        <label for="exampleFormControlSelect1">Category</label>
-                        <select class="form-select" id="category_id" name="category_id">
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ $category->id == $product->category_id ? 'selected' : '' }}>
-                                    {{ $category->title }} </option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <div class="error text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select class="form-select" name="category_id">
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ $category->id == $product->category_id ? 'selected' : '' }}>
+                                {{ $category->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
-                <div class="row pt-2">
-                    <div class="col-md-12 form-group">
-                        <label for="image" class="d-block">Image</label>
-                        <input type="file" class="mb-2 form-control" name="image" id="image"
-                            accept=".png, .jpg, .jpeg" value="{{ $product->image }}">
-                        <img src="{{ asset('storage/images/product/' . $product->image) }}" width="50px" height="50px"
-                            class="rounded mb-1" alt="abcd" title="" />
-                        @error('image')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
+
+                <div class="form-group">
+                    <label>Image</label>
+                    <input type="file" class="form-control" name="image" accept="image/png, image/jpg, image/jpeg">
+                    
+                    <div class="mt-2">
+                        <img src="{{ $product->image 
+                                ? asset('storage/images/product/' . $product->image) 
+                                : 'https://placehold.co/80x80?text=No+Image' 
+                            }}"
+                            class="preview-img" alt="Product">
                     </div>
+
+                    @error('image')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-                <div class="row pt-2">
-                    <div class="col-md-12 form-group">
-                        <label for="full_desc">Full description</label>
-                        <textarea class="form-control" name="full_desc" id="full_desc" rows="3"> {{ $product->full_desc }} </textarea>
-                        @error('full_desc')
-                            <div class="error text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
+
+
+                <div class="form-group">
+                    <label>Full Description</label>
+                    <textarea class="form-control" name="full_desc" rows="3">{{ $product->full_desc }}</textarea>
+                    @error('full_desc')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-                <div class="row pt-3">
+
+
+                <div class="row">
 
                     <div class="col-md-4 form-group">
-                        <label for="status">Status </label>
-                        <select class="mb-2 form-select" name="status" id="status">
+                        <label>Status</label>
+                        <select class="form-select" name="status">
                             <option value="1" {{ $product->status == 1 ? 'selected' : '' }}>Activate</option>
                             <option value="0" {{ $product->status == 0 ? 'selected' : '' }}>Deactivate</option>
                         </select>
                         @error('status')
-                            <div class="error text-danger">{{ $message }}</div>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <div class="col-md-4 form-group">
-                        <label for="exampleInputEmail1">Price</label>
-                        <input type="number" class="mb-2 form-control" id="price" name="price"
-                            placeholder="Enter product price" value="{{ $product->price }}">
+                        <label>Price</label>
+                        <input type="number" class="form-control" name="price"
+                            value="{{ $product->price }}" placeholder="Price">
                         @error('price')
-                            <div class="error text-danger">{{ $message }}</div>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <div class="col-md-4 form-group">
-                        <label for="exampleInputEmail1">Quantity</label>
-                        <input type="number" class="mb-2 form-control" id="quantity" name="quantity"
-                            placeholder="Enter product quantity" value="{{ $product->quantity }}">
+                        <label>Quantity</label>
+                        <input type="number" class="form-control" name="quantity"
+                            value="{{ $product->quantity }}" placeholder="Quantity">
                         @error('quantity')
-                            <div class="error text-danger">{{ $message }}</div>
+                            <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                 </div>
-                <div class="row pt-2">
-                    <div class="col-12 mb-2">
-                        <button type="submit" class=" float-end btn btn-primary">Update Product</button>
-                    </div>
+
+                <div class="pt-3 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        Update Product
+                    </button>
                 </div>
 
             </form>
         </div>
     </section>
-@endsection
-@section('scripts')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-    <script>
-        $().ready(function() {
 
-            $("#myForm").validate({
-                rules: {
-                    title: {
-                        required: true,
-                    },
-                    short_desc: {
-                        required: true,
-                        minlength: 3,
-                    },
-                    category_id: {
-                        required: true,
-                    },
-                    image: {
-                        accept: "image/jpg,image/jpeg,image/png,image/gif",
-                    },
-                    full_desc: {
-                        required: true,
-                        minlength: 3,
-                    },
-                    status: {
-                        required: true,
-                    },
-                    price: {
-                        required: true,
-                        minlength: 1,
-                        maxlength: 7,
-                        max: 9999999,
-                        min:1,
-                    },
-                    quantity: {
-                        required: true,
-                        minlength: 1,
-                        maxlength: 7,
-                        max: 9999999,
-                        min:1,
-                    }
-                },
-                messages: {
-                    title: {
-                        required: "Title is required",
-                    },
-                    short_desc: {
-                        required: "Short Description is required",
-                        minlength: "Enter at least 3 letter",
-                    },
-                    category_id: {
-                        required: "Category is required",
-                    },
-                    image: {
-                        accept: "Image must be a file of type: png, jpg, jpeg.",
-                    },
-                    full_desc: {
-                        required: "Full Description is required",
-                        minlength: "Enter at least 3 letter",
-                    },
-                    status: {
-                        required: "Status is required",
-                    },
-                    price: {
-                        required: "Price is required",
-                        minlength: "Price should not be greater than 1 character",
-                        maxlength: "Quantity should be at least 7 character long",
-                        max: "Price should not be greater than 9999999",
-                        min: "Price should not be less than 1",
-                    },
-                    quantity: {
-                        required: "Quantity is required",
-                        minlength: "Quantity should not be greater than 1 character",
-                        maxlength: "Quantity should be at least 7 character long",
-                        max: "Price should not be greater than 9999999",
-                        min: "Price should not be less than 1",
-                    }
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
-
-        });
-    </script>
 @endsection

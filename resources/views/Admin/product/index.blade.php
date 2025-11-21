@@ -3,61 +3,124 @@
     Products
 @endsection
 @section('styles')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
 
-    <style>
-        #selectedDeleteBtn {
-            display: none;
-        }
+<style>
+    /* Apple-like clean card */
+    .apple-card {
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.05);
+        transition: .3s ease;
+    }
+    .apple-card:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
 
-        #product_table td {
-            text-align: left;
-        }
+    h2 {
+        font-weight: 600;
+        letter-spacing: -.5px;
+    }
 
-        .export_btn,
-        .import_btn {
-            border: 1px solid #0055b0;
-        }
+    /* Buttons */
+    .btn-main {
+        background: #0074ff;
+        color: #fff;
+        border-radius: 10px;
+        padding: 7px 14px;
+        transition: .2s ease;
+    }
+    .btn-main:hover {
+        background: #0059c4;
+        color: #fff;
+    }
 
-        .export_btn:hover,
-        .import_btn:hover {
-            background-color: #0055b0;
-            color: #ffffff;
-        }
+    .btn-outline {
+        border: 1px solid #0074ff;
+        color: #0074ff;
+        border-radius: 10px;
+        padding: 7px 14px;
+        transition: .2s ease;
+    }
+    .btn-outline:hover {
+        background: #0074ff;
+        color: #fff;
+    }
 
-        #categoryFilter, #status {
-            width: 200px;
-        }
-    </style>
+    .table thead {
+        background: #fafafa;
+        font-weight: 600;
+    }
+
+    /* Table hover subtle */
+    #product_table tbody tr:hover {
+        background: #f7faff;
+        transition: .2s;
+    }
+
+    /* Image clean style */
+    .product-img {
+        width: 55px;
+        height: 55px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    /* Filters */
+    #categoryFilter, #status {
+        width: 230px;
+        border-radius: 8px;
+    }
+
+    #selectedDeleteBtn {
+        display: none;
+    }
+</style>
 @endsection
 
-@section('content')
-    <div class="mb-4">
-        <h2 class="float-start">Products</h2>
-        <a href="{{ route('product.create') }}" class="float-end btn ms-1" style="background: #0055b0; color:white;">
-            <i class="fa fa-plus"></i> Add Product</a>
-        <button type="button" class="float-end btn import_btn ms-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="fa fa-upload"></i> Import Excel</button>
-        <button class="float-end btn ms-1 export_btn" id="selectedexcelBtn"><i class="fa fa-download"></i> Export
-            Excel</button>
-        <button id="selectedDeleteBtn" class="float-end btn btn-danger "><i class="fa fa-trash"></i>
-            Delete</button>
-    </div><br><br>
 
-    <div class="p-3 row ms-1 me-1" style="background: white; border-radius:5px;">
-        <div class="d-flex bd-highlight ">
-            <div class="me-auto p-2 bd-highlight">
-                <label for="floatingInputGrid" class="d-block">Select Categories</label>
-                <select id="categoryFilter" class="d-inline">
+@section('content')
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Products</h2>
+
+        <div class="d-flex gap-2">
+            <button id="selectedDeleteBtn" class="btn btn-danger">
+                <i class="fa fa-trash"></i> Delete
+            </button>
+
+            <button class="btn btn-outline" id="selectedexcelBtn">
+                <i class="fa fa-download"></i> Export Excel
+            </button>
+
+            <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fa fa-upload"></i> Import Excel
+            </button>
+
+            <a href="{{ route('product.create') }}" class="btn btn-main">
+                <i class="fa fa-plus"></i> Add Product
+            </a>
+        </div>
+    </div>
+
+
+    <div class="apple-card mb-3">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="fw-semibold d-block">Select Category</label>
+                <select id="categoryFilter" class="form-select">
                     <option value="all">All Category</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->title }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="p-2 bd-highlight">
-                <label for="floatingInputGrid" class="d-block">Status</label>
-                <select id='status' class="form-control d-inline">
+
+            <div class="col-md-6">
+                <label class="fw-semibold d-block">Status</label>
+                <select id="status" class="form-select">
                     <option value="">Select Status</option>
                     <option value="1">Active</option>
                     <option value="0">Deactive</option>
@@ -65,6 +128,7 @@
             </div>
         </div>
     </div>
+
 
 
 
@@ -95,27 +159,28 @@
                 </div>
             </div>
 
-            <div class="pt-2 pb-2">
-                <table class="table table-striped table-bordered" id="product_table" class="display">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th style="text-align: left;">
-                                <input type="checkbox" id="selectAll" name="inputall" />
-                            </th>
-                            <th style="text-align: left;">Product Name</th>
-                            <th style="text-align: left;">Image</th>
-                            <th style="text-align: left;">Category Name</th>
-                            <th style="text-align: left;">Status</th>
-                            <th style="text-align: left;">Price</th>
-                            <th style="text-align: left;">Quantity</th>
-                            <th style="text-align: left;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="product_body">
-                        {{-- ajax will be display here  --}}
-                    </tbody>
-                </table>
-            </div>
+            <section class="main mt-3">
+                <div class="apple-card">
+                    <table class="table table-hover" id="product_table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll" /></th>
+                                <th>Product Name</th>
+                                <th>Image</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product_body">
+                            {{-- DataTables loads rows here --}}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
 
         </div>
     </section>

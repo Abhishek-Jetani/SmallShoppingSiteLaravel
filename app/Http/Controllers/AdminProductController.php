@@ -37,10 +37,17 @@ class AdminProductController extends Controller
                 ->addColumn('title', function ($row) {
                     return $row->title;
                 })
-                ->addColumn('image', function ($row) {
-                    $url = asset('storage/images/product/' . $row->image);
-                    return '<img src="' . $url . '" width="50px" height="50px" class="rounded" alt="Product Image" align="center" />';
-                })
+               ->addColumn('image', function ($row) {
+                        $url = asset('storage/images/product/' . $row->image);
+                        $error_url = asset('images/no_image.png');
+
+                        return '<img src="' . $url . '" 
+                                    width="50" height="50" 
+                                    class="rounded" 
+                                    alt="Product Image" 
+                                    onerror="this.src=\'' . $error_url . '\';" />';
+                    })
+
                 ->addColumn('category_name', function ($row) {
                     return $row->category->title;
                 })
