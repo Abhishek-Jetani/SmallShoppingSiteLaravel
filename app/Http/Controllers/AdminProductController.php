@@ -13,21 +13,33 @@ use App\Jobs\Job_ImportProductByCategory;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\AdminProductRequest;
 use Yajra\DataTables\DataTables;
+use App\Repositories\ProductRepositoryInterface; // Repository Pattern - Interface for dependency injection
 
 
 class AdminProductController extends Controller
 {
+    /**
+     * Repository Pattern - Dependency Injection
+     * 
+     * The ProductRepositoryInterface is injected via constructor.
+     * Laravel's service container automatically resolves ProductRepository
+     * based on the binding in AppServiceProvider.
+     */
+    protected $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
 
     public function index(Request $request)
     {
         $categories = Category::all();
         if ($request->ajax()) {
             $categoryId = $request->input('category_id');
-            $data = Product::with('category');
-
-            if ($categoryId !== 'all') {
-                $data->where('category_id', $categoryId);
-            }
+            
+            // Repository Pattern - Using repository method instead of direct model access
+            $data = $this->productRepository->getForDataTables($categoryId);
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -106,9 +118,11 @@ class AdminProductController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
             $imagePath = storeImageDatabase($request->file('image'), 'public/images/product', 'Product');
-            $product = new Product($request->all());
-            $product->image = $imagePath;
-            $product->save();
+            
+            // Repository Pattern - Using repository to create product instead of direct model access
+            $productData = $request->all();
+            $productData['image'] = $imagePath;
+            $this->productRepository->create($productData);
 
             return redirect()->route('product.index')->with('success', 'Product added successfully!');
         } catch (\Throwable $th) {
@@ -123,7 +137,8 @@ class AdminProductController extends Controller
 
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
+        // Repository Pattern - Using repository to find product instead of direct model access
+        $product = $this->productRepository->findById($id);
         $categories = Category::all();
         return view('Admin.product.edit', compact('product', 'categories'));
     }
@@ -132,22 +147,18 @@ class AdminProductController extends Controller
     {
         try {
             $request->validated();
+            $updateData = $request->all();
+            
             if ($request->hasFile('image')) {
                 if ($product->image) {
                     deleteImageInStorage('public/images/product', $product->image);
                 }
                 $imagePath = storeImageDatabase($request->file('image'), 'public/images/product', 'Product');
-                $product->image = $imagePath;
+                $updateData['image'] = $imagePath;
             }
-            $product->quantity = $product->quantity + $request->quantity;
-            $product->title = $request->title;
-            $product->short_desc = $request->short_desc;
-            $product->full_desc = $request->full_desc;
-            $product->category_id = $request->category_id;
-            $product->status = $request->status;
-            $product->price = $request->price;
-            $product->quantity = $request->quantity;
-            $product->save();
+            
+            // Repository Pattern - Using repository to update product instead of direct model access
+            $this->productRepository->update($product, $updateData);
 
             return redirect()->route('product.index')->with('success', 'Product updated successfully.');
         } catch (\Throwable $th) {
@@ -158,7 +169,9 @@ class AdminProductController extends Controller
     public function destroy($id)
     {
         try {
-
+            // Repository Pattern - Using repository to delete product instead of direct model access
+            $this->productRepository->delete($id);
+            
             $result = deleteItem(Product::class, $id, 'public/images/product');
 
             if ($result['success']) {
