@@ -1,0 +1,127 @@
+@startuml Activity Diagram - Shopping Cart and Checkout Process
+
+start
+
+:User visits website;
+
+if (User logged in?) then (No)
+    :Register/Login;
+    :Verify Email;
+else (Yes)
+endif
+
+:Browse Products;
+
+if (Filter by Category?) then (Yes)
+    :Select Category;
+    :Display Filtered Products;
+else (No)
+    :Display All Products;
+endif
+
+:View Product Details;
+
+if (Add to Cart?) then (Yes)
+    :Check if Product in Cart;
+    if (Already in Cart?) then (No)
+        :Add Product to Cart;
+        :Decrement Product Stock;
+        :Show Success Message;
+    else (Yes)
+        :Show Already in Cart Message;
+    endif
+else (No)
+endif
+
+if (View Cart?) then (Yes)
+    :Load Cart Items;
+    :Calculate Subtotal;
+    :Display Cart;
+    
+    if (Update Quantity?) then (Yes)
+        :Validate Stock;
+        if (Stock Available?) then (Yes)
+            :Update Cart Quantity;
+        else (No)
+            :Show Stock Error;
+        endif
+    endif
+    
+    if (Remove Item?) then (Yes)
+        :Remove from Cart;
+        :Increment Product Stock;
+    endif
+else (No)
+endif
+
+if (Add to Wishlist?) then (Yes)
+    :Add Product to Wishlist;
+    :Show Success Message;
+endif
+
+if (Proceed to Checkout?) then (Yes)
+    :Validate Cart;
+    if (Cart Empty?) then (Yes)
+        :Show Error: Cart Empty;
+        stop
+    else (No)
+    endif
+    
+    :Validate Address;
+    if (Address Valid?) then (No)
+        :Show Validation Errors;
+        stop
+    else (Yes)
+    endif
+    
+    :Check Product Stock;
+    if (All Items in Stock?) then (No)
+        :Show Out of Stock Error;
+        stop
+    else (Yes)
+    endif
+    
+    :Generate Invoice Number;
+    
+    fork
+        :Create Order for each Cart Item;
+        :Update Product Quantity;
+        :Delete Cart Item;
+    fork again
+        :Calculate Total Price;
+    end fork
+    
+    :Send Order Confirmation Email;
+    
+    if (Process Payment?) then (Yes)
+        :Redirect to Payment;
+        :Process Stripe Payment;
+        if (Payment Successful?) then (Yes)
+            :Show Payment Success;
+            :Order Completed;
+        else (No)
+            :Show Payment Error;
+            :Order Pending;
+        endif
+    else (No)
+        :Order Placed (Cash on Delivery);
+    endif
+    
+    :Show Order Success Message;
+else (No)
+endif
+
+if (View Orders?) then (Yes)
+    :Load User Orders;
+    :Display Orders;
+    
+    if (Download PDF?) then (Yes)
+        :Generate PDF;
+        :Download PDF;
+    endif
+endif
+
+stop
+
+@enduml
+

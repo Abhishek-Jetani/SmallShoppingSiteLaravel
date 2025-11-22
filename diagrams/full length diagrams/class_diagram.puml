@@ -1,0 +1,138 @@
+@startuml Class Diagram - Small Shopping Site
+
+!define RECTANGLE class
+
+class User {
+    -id: int
+    -name: string
+    -email: string
+    -password: string
+    -role: string
+    -status: string
+    -isAddress: boolean
+    -email_verified_at: datetime
+    -created_at: datetime
+    -updated_at: datetime
+    -deleted_at: datetime
+    +orders()
+    +carts()
+    +wishlists()
+}
+
+class Category {
+    -id: int
+    -title: string
+    -description: text
+    -image: string
+    -status: string
+    -created_at: datetime
+    -updated_at: datetime
+    -deleted_at: datetime
+    +products()
+}
+
+class Product {
+    -id: int
+    -title: string
+    -category_id: int
+    -image: string
+    -short_desc: text
+    -full_desc: text
+    -status: string
+    -price: decimal
+    -quantity: int
+    -created_at: datetime
+    -updated_at: datetime
+    -deleted_at: datetime
+    +category()
+    +orders()
+    +carts()
+    +wishlists()
+}
+
+class Order {
+    -id: int
+    -user_id: int
+    -product_id: int
+    -quantity: int
+    -total_price: decimal
+    -invoice_number: string
+    -address_line_1: string
+    -address_line_2: string
+    -state: string
+    -city: string
+    -pincode: string
+    -mobile_no: string
+    -created_at: datetime
+    -updated_at: datetime
+    -deleted_at: datetime
+    +user()
+    +product()
+}
+
+class Cart {
+    -id: int
+    -user_id: int
+    -product_id: int
+    -quantity: int
+    -created_at: datetime
+    -updated_at: datetime
+    +user()
+    +product()
+}
+
+class Wishlist {
+    -id: int
+    -user_id: int
+    -product_id: int
+    -created_at: datetime
+    -updated_at: datetime
+    -deleted_at: datetime
+    +user()
+    +product()
+}
+
+class State {
+    -id: int
+    -name: string
+    +cities()
+}
+
+class City {
+    -id: int
+    -name: string
+    -state_id: int
+    +state()
+}
+
+' Relationships
+User "1" --> "*" Order : places
+User "1" --> "*" Cart : has
+User "1" --> "*" Wishlist : has
+
+Category "1" --> "*" Product : contains
+
+Product "*" --> "1" Category : belongs to
+Product "1" --> "*" Order : ordered in
+Product "1" --> "*" Cart : added to
+Product "1" --> "*" Wishlist : saved in
+
+State "1" --> "*" City : has
+
+note right of User
+    Roles: admin, user
+    Uses SoftDeletes
+end note
+
+note right of Product
+    Stock management
+    Price and quantity tracking
+end note
+
+note right of Order
+    Invoice number generation
+    Address information stored
+end note
+
+@enduml
+

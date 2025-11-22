@@ -1,0 +1,139 @@
+@startuml Sequence Diagram - Admin Product Management Flow
+
+actor Admin
+participant "AdminController" as AC
+participant "AdminProductController" as APC
+participant "AdminCategoryController" as ACC
+participant "Product Model" as Product
+participant "Category Model" as Category
+participant "Order Model" as Order
+participant "User Model" as User
+participant "Excel Service" as Excel
+
+== Dashboard ==
+Admin -> AC: Access Dashboard
+AC -> Product: Count Products
+Product --> AC: Product Count
+AC -> Category: Count Categories
+Category --> AC: Category Count
+AC -> Order: Count Orders & Revenue
+Order --> AC: Order Stats
+AC -> User: Count Users
+User --> AC: User Count
+AC --> Admin: Display Dashboard
+
+== Product Management ==
+Admin -> APC: View Products
+APC -> Product: Get All Products
+Product --> APC: Product List
+APC --> Admin: Display Products
+
+Admin -> APC: Create Product
+APC -> Category: Get Categories
+Category --> APC: Category List
+APC --> Admin: Show Create Form
+Admin -> APC: Submit Product Data
+APC -> Product: Validate & Create
+Product --> APC: Product Created
+APC --> Admin: Success Message
+
+Admin -> APC: Edit Product
+APC -> Product: Get Product
+Product --> APC: Product Data
+APC -> Category: Get Categories
+Category --> APC: Category List
+APC --> Admin: Show Edit Form
+Admin -> APC: Update Product
+APC -> Product: Validate & Update
+Product --> APC: Product Updated
+APC --> Admin: Success Message
+
+Admin -> APC: Delete Product
+APC -> Product: Delete Product
+Product --> APC: Deleted
+APC --> Admin: Success Message
+
+Admin -> APC: Export Products
+APC -> Excel: Export to Excel
+Excel -> Product: Get Products
+Product --> Excel: Product Data
+Excel --> APC: Excel File
+APC --> Admin: Download Excel
+
+Admin -> APC: Import Products
+Admin -> APC: Upload Excel File
+APC -> Excel: Import from Excel
+Excel -> Product: Create/Update Products
+Product --> Excel: Import Result
+Excel --> APC: Import Status
+APC --> Admin: Import Complete
+
+== Category Management ==
+Admin -> ACC: View Categories
+ACC -> Category: Get All Categories
+Category --> ACC: Category List
+ACC --> Admin: Display Categories
+
+Admin -> ACC: Create Category
+ACC --> Admin: Show Create Form
+Admin -> ACC: Submit Category Data
+ACC -> Category: Validate & Create
+Category --> ACC: Category Created
+ACC --> Admin: Success Message
+
+Admin -> ACC: Edit Category
+ACC -> Category: Get Category
+Category --> ACC: Category Data
+ACC --> Admin: Show Edit Form
+Admin -> ACC: Update Category
+ACC -> Category: Validate & Update
+Category --> ACC: Category Updated
+ACC --> Admin: Success Message
+
+Admin -> ACC: Delete Category
+ACC -> Category: Delete Category
+Category --> ACC: Deleted
+ACC --> Admin: Success Message
+
+== Order Management ==
+Admin -> AC: View All Orders
+AC -> Order: Get All Orders with Users & Products
+Order --> AC: Order List
+AC --> Admin: Display Orders
+
+Admin -> AC: Delete Order
+AC -> Order: Delete Order
+Order --> AC: Deleted
+AC --> Admin: Success Message
+
+== Customer Management ==
+Admin -> AC: View Customers
+AC -> User: Get All Users
+User --> AC: User List
+AC --> Admin: Display Customers
+
+Admin -> AC: Activate Customer
+AC -> User: Update Status (Active)
+User --> AC: Updated
+AC --> Admin: Customer Activated
+
+Admin -> AC: Deactivate Customer
+AC -> User: Update Status (Inactive)
+User --> AC: Updated
+AC --> Admin: Customer Deactivated
+
+Admin -> AC: Delete Customer
+AC -> User: Soft Delete User
+User --> AC: Deleted
+AC --> Admin: Customer Deleted
+
+== Reports ==
+Admin -> AC: View Reports
+AC -> Order: Get Order Statistics
+Order --> AC: Order Stats
+AC -> Product: Get Product Statistics
+Product --> AC: Product Stats
+AC --> Admin: Display Reports
+
+@enduml
+

@@ -1,0 +1,88 @@
+@startuml Sequence Diagram - Order Placement Flow
+
+actor User
+participant "ProductController" as PC
+participant "CartController" as CC
+participant "OrderController" as OC
+participant "PaymentController" as PayC
+participant "Cart Model" as Cart
+participant "Product Model" as Product
+participant "Order Model" as Order
+participant "Mail Service" as Mail
+
+User -> PC: Browse Products
+PC -> Product: Get Products
+Product --> PC: Product List
+PC --> User: Display Products
+
+User -> PC: View Product Details
+PC -> Product: Get Product Details
+Product --> PC: Product Info
+PC --> User: Show Product Details
+
+User -> CC: Add to Cart
+CC -> Cart: Check if exists
+alt Product not in cart
+    CC -> Cart: Create Cart Item
+    CC -> Product: Decrement Quantity
+    Product --> CC: Updated
+    CC --> User: Product Added
+else Product already in cart
+    CC --> User: Already in Cart
+end
+
+User -> CC: View Cart
+CC -> Cart: Get User Cart Items
+Cart --> CC: Cart Items
+CC -> Product: Get Product Details
+Product --> CC: Product Info
+CC --> User: Display Cart
+
+User -> CC: Update Quantity
+CC -> Cart: Update Quantity
+CC -> Product: Check Stock
+alt Stock Available
+    Cart --> CC: Updated
+    CC --> User: Quantity Updated
+else Stock Not Available
+    CC --> User: Error Message
+end
+
+User -> OC: Place Order
+OC -> Cart: Get Cart Items
+Cart --> OC: Cart Items
+OC -> Product: Validate Stock
+alt Stock Available
+    loop For each cart item
+        OC -> Order: Create Order
+        OC -> Product: Update Quantity
+        OC -> Cart: Delete Cart Item
+    end
+    OC -> Mail: Send Order Confirmation
+    Mail --> User: Order Email
+    OC --> User: Order Placed Successfully
+else Stock Not Available
+    OC --> User: Error: Out of Stock
+end
+
+User -> PayC: Process Payment
+PayC -> PayC: Process Stripe Payment
+alt Payment Successful
+    PayC --> User: Payment Success
+else Payment Failed
+    PayC --> User: Payment Error
+end
+
+User -> OC: View Orders
+OC -> Order: Get User Orders
+Order --> OC: Order List
+OC --> User: Display Orders
+
+User -> OC: Download Order PDF
+OC -> Order: Get User Orders
+Order --> OC: Order Data
+OC -> OC: Generate PDF
+OC --> User: Download PDF
+
+@enduml
+
