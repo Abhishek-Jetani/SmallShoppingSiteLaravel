@@ -331,7 +331,88 @@ $(document).ready(function() {
             mobile_no: { required: true, minlength: 10, maxlength: 10 },
         },
         submitHandler: function(form) {
-            form.submit();
+            // Prevent default form submission
+            event.preventDefault();
+            
+            // Get state and city names from selected options
+            var stateSelect = $('select[name="state"]');
+            var citySelect = $('select[name="city"]');
+            var stateName = stateSelect.find('option:selected').text();
+            var cityName = citySelect.find('option:selected').text();
+            
+            // Validate that actual values are selected (not placeholders)
+            if (stateName === 'Select State' || cityName === 'Select City') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Validation Error",
+                    text: "Please select both state and city."
+                });
+                return false;
+            }
+            
+            // Get form data
+            var formData = {
+                address_line_1: $('input[name="address_line_1"]').val(),
+                address_line_2: $('input[name="address_line_2"]').val(),
+                state: stateName,
+                city: cityName,
+                pincode: $('input[name="pincode"]').val(),
+                mobile_no: $('input[name="mobile_no"]').val(),
+                _token: $('input[name="_token"]').val()
+            };
+
+            // Show loading state
+            var submitBtn = $(form).find('button[type="submit"]');
+            var originalText = submitBtn.html();
+            submitBtn.prop('disabled', true).html('Placing Order...');
+
+            // Make AJAX request
+            $.ajax({
+                url: "{{ route('order.place') }}",
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        // Close the modal
+                        $("#addressModal").modal("hide");
+                        
+                        Swal.fire({
+                            icon: "success",
+                            title: "Order Placed!",
+                            text: response.message || "Your order has been placed successfully.",
+                            confirmButtonText: "OK"
+                        }).then(function() {
+                            window.location.href = "{{ route('order.getUserOrders') }}";
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message || "Failed to place order. Please try again."
+                        });
+                        submitBtn.prop('disabled', false).html(originalText);
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = "Failed to place order. Please try again.";
+                    
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.responseJSON.errors) {
+                            var errors = Object.values(xhr.responseJSON.errors).flat();
+                            errorMessage = errors.join('\n');
+                        }
+                    }
+                    
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: errorMessage
+                    });
+                    submitBtn.prop('disabled', false).html(originalText);
+                }
+            });
         }
     });
 

@@ -29,7 +29,7 @@ class OrderController extends Controller
 
             // Process the order
             $userId = Auth::id();
-            $cartItems = Cart::where('user_id', $userId)->get();
+            $cartItems = Cart::where('user_id', $userId)->with('product')->get();
 
             if ($cartItems->isEmpty()) {
                 return response()->json(['success' => false, 'message' => 'Cart is empty'], 400);
@@ -38,6 +38,7 @@ class OrderController extends Controller
             $invoiceNumber = Carbon::now()->format('YmdHis');
             $outOfStockProducts = [];
             $total_order_price = 0;
+            $mailData = [];
 
             foreach ($cartItems as $cartItem) {
                 $product = $cartItem->product;
