@@ -112,12 +112,21 @@
             <table class="w-full">
                 <tr>
                     <td class="w-half">
+                        <?php $firstOrder = $orders->first(); ?>
                         <div>
                             <h4>To: {{ $user }}</h4>
                         </div>
-                        <div>new factory </div>
-                        <div>A-12, Iscon Cross Road, </div>
-                        <div> Ahmedabad</div>
+                        @if($firstOrder && ($firstOrder->address_line_1 || $firstOrder->address_line_2))
+                            <div>{{ $firstOrder->address_line_1 }}</div>
+                            @if($firstOrder->address_line_2)
+                                <div>{{ $firstOrder->address_line_2 }}</div>
+                            @endif
+                            <div>{{ $firstOrder->city }}, {{ $firstOrder->state }}</div>
+                            <div>Pincode: {{ $firstOrder->pincode }}</div>
+                            <div>Mobile: {{ $firstOrder->mobile_no }}</div>
+                        @else
+                            <div>Address not provided</div>
+                        @endif
                     </td>
                     <td class="w-half">
                         <div>

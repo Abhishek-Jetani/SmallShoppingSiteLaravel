@@ -117,59 +117,90 @@
 
 {{-- Address Modal --}}
 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
             <form id="address_form">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addressModalLabel">Enter Your Address</h5>
+                    <h5 class="modal-title" id="addressModalLabel">Shipping Details & Order Summary</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
 
                 <div class="modal-body">
                     @csrf
 
-                    <div class="mb-3">
-                        <label>Address Line 1</label>
-                        <input type="text" name="address_line_1" class="form-control" required>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h6 class="mb-3">Delivery Address</h6>
+
+                            <div class="mb-3">
+                                <label class="form-label">Address Line 1</label>
+                                <input type="text" name="address_line_1" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Address Line 2 <small class="text-muted">(Optional)</small></label>
+                                <input type="text" name="address_line_2" class="form-control">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">State</label>
+                                    <select class="form-select" name="state" required>
+                                        <option selected disabled>Select State</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">City</label>
+                                    <select class="form-select" name="city" required>
+                                        <option selected disabled>Select City</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Pincode</label>
+                                    <input type="text" name="pincode" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mobile Number</label>
+                                    <input type="tel" name="mobile_no" class="form-control" minlength="10" maxlength="10" required>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-5">
+                            <h6 class="mb-3">Order Summary</h6>
+                            <div class="p-3" style="background:#f8f9fb;border-radius:10px;">
+                                @if(isset($carts) && $carts->count())
+                                    @foreach($carts as $cart)
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="{{ $cart->product->image ? asset('storage/images/product/' . $cart->product->image) : asset('images/no_image.png') }}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid #eaeaea;margin-right:10px;"/>
+                                            <div style="flex:1;">
+                                                <div style="font-weight:600;">{{ \Illuminate\Support\Str::limit($cart->product->title, 40) }}</div>
+                                                <div class="text-muted small">Qty: {{ $cart->quantity }} &middot; <span>₹{{ $cart->product->price * $cart->quantity }}</span></div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <hr>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="fw-bold">Total</div>
+                                        <div class="fw-bold">₹{{ $subtotal }}</div>
+                                    </div>
+                                @else
+                                    <div>No items in cart.</div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label>Address Line 2 (Optional)</label>
-                        <input type="text" name="address_line_2" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label>State</label>
-                        <select class="form-select" name="state" required>
-                            <option selected disabled>Select State</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>City</label>
-                        <select class="form-select" name="city" required>
-                            <option selected disabled>Select City</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Pincode</label>
-                        <input type="text" name="pincode" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Mobile Number</label>
-                        <input type="number" name="mobile_no" class="form-control"
-                               minlength="10" maxlength="10" required>
-                    </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit"
-                            class="btn btn-dark"
-                            style="border-radius:10px;">
-                        Place Order
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-dark" style="border-radius:10px;">Place Order</button>
                 </div>
 
             </form>

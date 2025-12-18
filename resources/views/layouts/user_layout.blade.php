@@ -178,9 +178,6 @@
                         <li class="nav-item">
                             <a class="nav-link {{ $r=='wishlist.index' ? 'active_nav' : '' }}" href="{{ route('wishlist.index') }}"><i class="fa fa-heart"></i> Wishlist</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ $r=='order.getUserOrders' ? 'active_nav' : '' }}" href="{{ route('order.getUserOrders') }}"><i class="fa fa-shopping-bag"></i> My Orders</a>
-                        </li>
                     @endif
 
                     <li class="nav-item">
@@ -281,8 +278,6 @@
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
