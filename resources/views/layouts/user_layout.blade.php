@@ -217,7 +217,9 @@
                             </form>
                         </div>
                     @else
-                        <a class="btn btn-primary" href="{{ route('login') }}">Login</a>
+                        <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#authModal">
+                            <i class="fa fa-sign-in-alt me-2"></i>Login
+                        </a>
                     @endif
                 </div>
             </div>
@@ -311,6 +313,122 @@
             }
         };
     </script>
+
+    <!-- Auth Modal (Login/Register) -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius:20px;overflow:hidden;border:none;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div class="row g-0">
+                    <div class="col-md-5 d-none d-md-block position-relative" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px;color:white;">
+                            <div style="width:60px;height:60px;background:rgba(255,255,255,0.2);border-radius:15px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+                                <i class="fa fa-shopping-bag" style="font-size:28px;"></i>
+                            </div>
+                            <h3 style="font-weight:700;letter-spacing:-0.6px;margin-bottom:12px;font-size:28px;">Welcome Back!</h3>
+                            <p style="opacity:0.95;margin-bottom:24px;font-size:15px;">Sign in to access your account and enjoy seamless shopping experience.</p>
+                            <ul style="padding-left:0;list-style:none;opacity:0.95;">
+                                <li style="margin-bottom:12px;"><i class="fa fa-check-circle me-2"></i>Fast & secure checkout</li>
+                                <li style="margin-bottom:12px;"><i class="fa fa-check-circle me-2"></i>Track your orders</li>
+                                <li style="margin-bottom:12px;"><i class="fa fa-check-circle me-2"></i>Save multiple addresses</li>
+                                <li><i class="fa fa-check-circle me-2"></i>Wishlist & favorites</li>
+                            </ul>
+                        </div>
+                        <div style="position:absolute;right:20px;bottom:20px;opacity:0.1;font-weight:900;font-size:140px;transform:rotate(-12deg);">SS</div>
+                    </div>
+                    <div class="col-md-7 col-12">
+                        <div class="p-4 p-md-5">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="mb-0 fw-bold" style="font-size:24px;">Account</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <ul class="nav nav-tabs mb-4" id="authTab" role="tablist" style="border-bottom:2px solid #e9ecef;">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active fw-semibold" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-pane" type="button" role="tab" style="border:none;border-bottom:3px solid #667eea;color:#667eea;">Login</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link fw-semibold" id="register-tab" data-bs-toggle="tab" data-bs-target="#register-pane" type="button" role="tab" style="border:none;color:#6c757d;">Register</button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="login-pane" role="tabpanel">
+                                    <form method="POST" action="{{ route('login') }}">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Email</label>
+                                            <input type="email" name="email" class="form-control" required autofocus placeholder="Enter your email" style="border-radius:10px;padding:12px;">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Password</label>
+                                            <input type="password" name="password" class="form-control" required placeholder="Enter your password" style="border-radius:10px;padding:12px;">
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                                                <label class="form-check-label" for="remember">Remember me</label>
+                                            </div>
+                                            @if (Route::has('password.request'))
+                                                <a href="{{ route('password.request') }}" style="text-decoration:none;color:#667eea;">Forgot password?</a>
+                                            @endif
+                                        </div>
+                                        <div class="d-grid mb-3">
+                                            <button class="btn btn-primary btn-lg" style="border-radius:10px;padding:12px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border:none;">
+                                                <i class="fa fa-sign-in-alt me-2"></i>Sign In
+                                            </button>
+                                        </div>
+                                        <div class="text-center mb-3">
+                                            <span class="text-muted small">Or continue with</span>
+                                        </div>
+                                        <div class="d-grid">
+                                            <a href="{{ route('auth.google') }}" class="btn btn-outline-danger" style="border-radius:10px;padding:12px;border:2px solid #dc3545;">
+                                                <i class="fab fa-google me-2"></i>Continue with Google
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="tab-pane fade" id="register-pane" role="tabpanel">
+                                    <form method="POST" action="{{ route('register') }}">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Full Name</label>
+                                            <input type="text" name="name" class="form-control" required placeholder="Enter your full name" style="border-radius:10px;padding:12px;">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Email</label>
+                                            <input type="email" name="email" class="form-control" required placeholder="Enter your email" style="border-radius:10px;padding:12px;">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Password</label>
+                                            <input type="password" name="password" class="form-control" required placeholder="Create a password" style="border-radius:10px;padding:12px;">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label fw-semibold">Confirm Password</label>
+                                            <input type="password" name="password_confirmation" class="form-control" required placeholder="Confirm your password" style="border-radius:10px;padding:12px;">
+                                        </div>
+                                        <div class="d-grid mb-3">
+                                            <button class="btn btn-primary btn-lg" style="border-radius:10px;padding:12px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border:none;">
+                                                <i class="fa fa-user-plus me-2"></i>Create Account
+                                            </button>
+                                        </div>
+                                        <div class="text-center mb-3">
+                                            <span class="text-muted small">Or continue with</span>
+                                        </div>
+                                        <div class="d-grid">
+                                            <a href="{{ route('auth.google') }}" class="btn btn-outline-danger" style="border-radius:10px;padding:12px;border:2px solid #dc3545;">
+                                                <i class="fab fa-google me-2"></i>Continue with Google
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @yield('scripts')
 

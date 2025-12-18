@@ -142,9 +142,19 @@ Route::group(['middleware' => ['isUser', 'auth', 'verified']], function () {
 
 // ==========================================   Other/Common Routes   ==================================================
 Route::group([], function () {
+    // Redirect the default auth GET pages to homepage and open modal
+    Route::get('/login', function () {
+        return redirect('/?openAuth=login');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return redirect('/?openAuth=register');
+    })->name('register');
+
     Auth::routes();
 
-    // home without login
+    // Google Authentication
+    Route::post('/auth/google', 'Auth\GoogleAuthController@handleGoogleAuth')->name('auth.google');
     Route::controller(HomeController::class)->group(function () {
         // test
         Route::get('/welcome', 'welcome')->name('welcome');
