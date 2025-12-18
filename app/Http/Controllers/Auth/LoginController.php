@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Illuminate\Http\Request;
@@ -26,6 +27,45 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \App\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function login(LoginRequest $request)
+    {
+        // Validation is handled by LoginRequest FormRequest
+        // Now use the trait's logic for login attempts
+        if (method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptLogin($request)) {
+            if ($request->hasSession()) {
+                $request->session()->put('auth.password_confirmed_at', time());
+            }
+            return $this->sendLoginResponse($request);
+        }
+
+        $this->incrementLoginAttempts($request);
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    /**
+     * Override validateLogin to prevent duplicate validation
+     * since LoginRequest already handles validation
+     */
+    protected function validateLogin(Request $request)
+    {
+        // Validation is handled by LoginRequest FormRequest
+        // No need to validate again here
+    }
 
     protected function authenticated(Request $request, $user)
     {
@@ -68,7 +108,6 @@ class LoginController extends Controller
             Cache::flush();
             session(['preintended' => url()->previous()]);
         }
-        return view("auth.login");
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -85,11 +86,9 @@ class RegisterController extends Controller
     }
 
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $this->validator($request->all())->validate();
-
-        $user = $this->create($request->all());
+        $user = $this->create($request->validated());
 
         Auth::login($user);
 

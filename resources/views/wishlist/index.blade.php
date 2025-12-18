@@ -54,7 +54,7 @@
 
                 <!-- Product Image + Fallback -->
                 <img src="{{ asset('storage/images/product/' . $wishlist->product->image) }}"
-                     onerror="this.src='{{ asset('images/no-product.png') }}'"
+                     onerror="this.src='{{ asset('images/no_image.png') }}'"
                      class="wishlist-img me-4">
 
                 <div class="flex-grow-1">

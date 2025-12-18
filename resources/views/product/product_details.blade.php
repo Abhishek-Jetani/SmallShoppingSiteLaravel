@@ -159,10 +159,16 @@
                             Go to Cart
                         </a>
                     @else
-                        <button class="cart-btn add-to-cart {{ $product->quantity <= 0 ? 'disabled' : '' }}"
-                                data-product-id="{{ $product->id }}">
-                            Add to Cart
-                        </button>
+                        @if (Auth::check())
+                            <button class="cart-btn add-to-cart {{ $product->quantity <= 0 ? 'disabled' : '' }}"
+                                    data-product-id="{{ $product->id }}">
+                                Add to Cart
+                            </button>
+                        @else
+                            <a class="cart-btn btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                Login to Proceed
+                            </a>
+                        @endif
                     @endif
 
 

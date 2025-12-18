@@ -154,7 +154,8 @@ Route::group([], function () {
     Auth::routes();
 
     // Google Authentication
-    Route::post('/auth/google', 'Auth\GoogleAuthController@handleGoogleAuth')->name('auth.google');
+    Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
     Route::controller(HomeController::class)->group(function () {
         // test
         Route::get('/welcome', 'welcome')->name('welcome');
