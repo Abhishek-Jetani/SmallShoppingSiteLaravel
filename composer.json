@@ -7,9 +7,11 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.1",
+        "firebase/php-jwt": "^6.11",
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
+        "laravel/socialite": "^5.24",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
         "maatwebsite/excel": "^3.1",

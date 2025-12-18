@@ -10,9 +10,11 @@
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
         * {
@@ -25,7 +27,7 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            font-family: "Inter", sans-serif;
+            font-family: "Poppins", sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             position: relative;
             overflow: hidden;
@@ -70,7 +72,7 @@
             to { transform: translateY(30px) scale(1.1); } 
         }
 
-        /* Login Card */
+        /* Login Container */
         .login-container {
             position: relative;
             z-index: 1;
@@ -85,14 +87,26 @@
             backdrop-filter: blur(20px) saturate(180%); 
             background: linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05)); 
             border: 1px solid rgba(255,255,255,0.2); 
-            border-radius: 24px; 
-            padding: 48px 40px; 
+            border-radius: 28px; 
+            padding: 50px 45px; 
             box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
             width: 100%;
-            max-width: 450px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 500px;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-card::before {
@@ -113,47 +127,59 @@
         }
 
         .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 70px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset;
+            transform: translateY(-8px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset;
         }
 
         /* Logo/Icon */
         .login-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-            border-radius: 20px;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 28px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1));
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 2px solid rgba(255,255,255,0.3);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .login-icon i {
-            font-size: 36px;
+            font-size: 42px;
             color: rgba(255,255,255,0.95);
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Typography */
         .title-text{ 
             font-weight: 800; 
-            letter-spacing: -1px; 
-            font-size: 32px;
-            margin-bottom: 8px;
+            letter-spacing: -1.2px; 
+            font-size: 36px;
+            margin-bottom: 10px;
             text-align: center;
-            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.8));
+            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.85));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
         .subtitle-text{ 
             color: rgba(255,255,255,0.85); 
             text-align: center;
-            font-size: 15px;
-            margin-bottom: 32px;
+            font-size: 16px;
+            margin-bottom: 36px;
             font-weight: 400;
+            line-height: 1.5;
         }
 
         /* Form Elements */
@@ -169,7 +195,7 @@
             background: rgba(255,255,255,0.1); 
             border: 1.5px solid rgba(255,255,255,0.2); 
             color: #fff; 
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 14px 18px;
             font-size: 15px;
             transition: all 0.3s ease;
@@ -185,27 +211,31 @@
             border-color: rgba(255,255,255,0.4);
             outline: none;
             transform: translateY(-2px);
+            color: #fff;
         }
 
         .form-control:hover {
             border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.12);
         }
 
         /* Button */
         .btn-main{ 
             width: 100%; 
-            border-radius: 12px; 
+            border-radius: 14px; 
             font-weight: 700; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none; 
             color: white; 
-            padding: 16px;
-            font-size: 16px;
+            padding: 14px;
+            font-size: 15px;
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin-top: 8px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-main::before {
@@ -215,8 +245,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.6s ease;
         }
 
         .btn-main:hover::before {
@@ -225,11 +255,16 @@
 
         .btn-main:hover{ 
             transform: translateY(-3px); 
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 15px 45px rgba(102, 126, 234, 0.5);
         }
 
         .btn-main:active {
             transform: translateY(-1px);
+        }
+
+        .btn-main:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         /* Error Messages */
@@ -251,7 +286,7 @@
             bottom: 30px; 
             opacity: 0.05; 
             font-weight: 900; 
-            font-size: 180px; 
+            font-size: 200px; 
             transform: rotate(-15deg);
             pointer-events: none;
             z-index: 0;
@@ -260,18 +295,22 @@
         /* Responsive */
         @media (max-width: 576px) {
             .login-card {
-                padding: 36px 28px;
-                border-radius: 20px;
+                padding: 40px 28px;
+                border-radius: 24px;
             }
             .title-text {
-                font-size: 28px;
+                font-size: 30px;
             }
             .login-icon {
-                width: 70px;
-                height: 70px;
+                width: 80px;
+                height: 80px;
             }
             .login-icon i {
-                font-size: 32px;
+                font-size: 36px;
+            }
+            .subtitle-text {
+                font-size: 14px;
+                margin-bottom: 24px;
             }
         }
 
@@ -312,18 +351,18 @@
     <div class="login-container">
         <div class="login-card text-white">
             <div class="login-icon">
-                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-lock"></i>
             </div>
             
             <h2 class="title-text">Admin Portal</h2>
-            <p class="subtitle-text">Sign in to access your dashboard</p>
+            <p class="subtitle-text">Secure access to your dashboard. Sign in with your credentials.</p>
 
             <form method="POST" action="{{ route('admin.admin_login') }}" id="loginForm">
                 @csrf
 
                 <div class="mb-4">
                     <label for="email">
-                        <i class="fas fa-envelope me-2"></i>Email Address
+                        <i class="fas fa-envelope me-2" style="opacity: 0.8;"></i>Email Address
                     </label>
                     <input 
                         id="email" 
@@ -344,7 +383,7 @@
 
                 <div class="mb-4">
                     <label for="password">
-                        <i class="fas fa-lock me-2"></i>Password
+                        <i class="fas fa-key me-2" style="opacity: 0.8;"></i>Password
                     </label>
                     <input 
                         id="password" 
